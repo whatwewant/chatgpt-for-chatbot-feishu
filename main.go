@@ -45,11 +45,6 @@ func main() {
 				Usage:   "enable token verification if you need",
 				EnvVars: []string{"VERIFICATION_TOKEN"},
 			},
-			&cli.BoolFlag{
-				Name:    "challenge",
-				Usage:   "server as challenge",
-				EnvVars: []string{"CHALLENGE"},
-			},
 		},
 	})
 
@@ -61,7 +56,6 @@ func main() {
 			AppSecret:         ctx.String("app-secret"),
 			EncryptKey:        ctx.String("encrypt-key"),
 			VerificationToken: ctx.String("verification-token"),
-			AsChallenge:       ctx.Bool("challenge"),
 		})
 	})
 

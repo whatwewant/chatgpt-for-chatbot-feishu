@@ -1,26 +1,22 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
-	"strings"
 	"time"
 
-	"github.com/go-zoox/core-utils/fmt"
-
-	"github.com/PullRequestInc/go-gpt3"
-	"github.com/go-lark/lark"
 	"github.com/go-zoox/core-utils/regexp"
+
+	"github.com/go-zoox/core-utils/fmt"
+	"github.com/go-zoox/feishu"
+
+	chatgpt "github.com/go-zoox/chatgpt-client"
+	feishuEvent "github.com/go-zoox/feishu/event"
+	"github.com/go-zoox/feishu/message"
 	"github.com/go-zoox/logger"
 	"github.com/go-zoox/retry"
 	"github.com/go-zoox/zoox"
 	"github.com/go-zoox/zoox/defaults"
-	larkcore "github.com/larksuite/oapi-sdk-go/v3/core"
-	"github.com/larksuite/oapi-sdk-go/v3/core/httpserverext"
-	larkevent "github.com/larksuite/oapi-sdk-go/v3/event"
-	"github.com/larksuite/oapi-sdk-go/v3/event/dispatcher"
-	larkim "github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
 )
 
 type FeishuBotConfig struct {
@@ -30,33 +26,67 @@ type FeishuBotConfig struct {
 	AppSecret         string
 	EncryptKey        string
 	VerificationToken string
-	//
-	AsChallenge bool
 }
 
 func ServeFeishuBot(cfg *FeishuBotConfig) error {
 	app := defaults.Application()
 
-	client := gpt3.NewClient(cfg.ChatGPTAPIKey, gpt3.WithHTTPClient(&http.Client{
-		Timeout: time.Duration(600 * time.Second),
-	}))
-	bot := lark.NewChatBot(cfg.AppID, cfg.AppSecret)
-	_, _ = bot.GetTenantAccessTokenInternal(true)
-	botInfo, err := bot.GetBotInfo()
+	client, err := chatgpt.New(&chatgpt.Config{
+		APIKey: cfg.ChatGPTAPIKey,
+	})
+	if err != nil {
+		return fmt.Errorf("failed to create chatgpt client: %v", err)
+	}
+
+	// bot := lark.NewChatBot(cfg.AppID, cfg.AppSecret)
+
+	bot := feishu.New(&feishu.Config{
+		AppID:     cfg.AppID,
+		AppSecret: cfg.AppSecret,
+	})
+	// _, _ = bot.GetTenantAccessTokenInternal(true)
+	botInfo, err := bot.Bot().GetBotInfo()
 	if err != nil {
 		return fmt.Errorf("failed to get bot info: %v", err)
 	}
 
 	reply := func(chatID, answer string) error {
-		msg := lark.NewMsgBuffer(lark.MsgPost)
-		postContent := lark.NewPostBuilder().
-			// Title("asdaads").
-			TextTag(answer, 1, true).
-			Render()
-		om := msg.BindOpenChatID(chatID).Post(postContent).Build()
+		// msg := lark.NewMsgBuffer(lark.MsgPost)
+		// postContent := lark.NewPostBuilder().
+		// 	// Title("asdaads").
+		// 	TextTag(answer, 1, true).
+		// 	Render()
+		// om := msg.BindOpenChatID(chatID).Post(postContent).Build()
+
+		content, err := json.Marshal(map[string]any{
+			"zh_cn": map[string]any{
+				"title": "",
+				"content": [][]map[string]any{
+					{
+						{
+							"tag":       "text",
+							"un_escape": true,
+							"text":      answer,
+						},
+					},
+				},
+			},
+		})
+		if err != nil {
+			return fmt.Errorf("failed to marshal content: %v", err)
+		}
+
+		//  "{\"zh_cn\":{\"title\":\"\",\"content\":[[{\"tag\":\"text\",\"un_escape\":true,\"text\":\"你好\\n-------------\\nNew\\n\\n你好！很高兴见到你！\",\"lines\":1}]]}}",
+		fmt.Println("reply feishu content: ", string(content))
 
 		return retry.Retry(func() error {
-			resp, err := bot.PostMessage(om)
+			// resp, err := bot.PostMessage(om)
+			resp, err := bot.Message().Send(&message.SendRequest{
+				ReceiveIDType: "chat_id",
+				ReceiveID:     chatID,
+				MsgType:       "post",
+				Content:       string(content),
+			})
 			if err != nil {
 				logger.Errorf("failed to post message: %v", err)
 				return fmt.Errorf("failed to request when reply: %v", err)
@@ -64,12 +94,12 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 
 			logger.Infof("robot response: %v", resp)
 
-			//	Invalid access token for authorization. Please make a request with token attached
-			// update the access token
-			if resp.Code == 99991663 {
-				_, _ = bot.GetTenantAccessTokenInternal(true)
-				return fmt.Errorf("failed to reply: %s", resp.Msg)
-			}
+			// //	Invalid access token for authorization. Please make a request with token attached
+			// // update the access token
+			// if resp.Code == 99991663 {
+			// 	_, _ = bot.GetTenantAccessTokenInternal(true)
+			// 	return fmt.Errorf("failed to reply: %s", resp.Msg)
+			// }
 
 			return nil
 		}, 3, 3*time.Second)
@@ -77,23 +107,53 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 
 	fmt.PrintJSON(map[string]interface{}{
 		"cfg": cfg,
-		"bot": botInfo.Bot,
+		"bot": botInfo,
 	})
 
-	// 注册消息处理器
-	handler := dispatcher.NewEventDispatcher(cfg.VerificationToken, cfg.EncryptKey).
-		OnP2MessageReceiveV1(func(ctx context.Context, event *larkim.P2MessageReceiveV1) error {
-			// 处理消息 event，这里简单打印消息的内容
-			fmt.Println(larkcore.Prettify(event))
-			fmt.Println("OnP2MessageReceiveV1", event.RequestId())
+	app.Post("/", func(ctx *zoox.Context) {
+		var request feishuEvent.EventRequest
+		if err := ctx.BindJSON(&request); err != nil {
+			ctx.Fail(err, 500, "Internal Server Error")
+			return
+		}
 
-			message := event.Event.Message.Content
-			if message != nil {
+		// fmt.PrintJSON(map[string]any{
+		// 	"request":      request,
+		// 	"is_challenge": request.IsChallenge(),
+		// })
+
+		if request.IsChallenge() {
+			// type Challenge struct {
+			// 	Challenge string `json:"challenge"`
+			// }
+			// var c Challenge
+			// if err := ctx.BindJSON(&c); err != nil {
+			// 	ctx.Fail(err, 400000, "invalid challenge data")
+			// 	return
+			// }
+
+			if request.Challenge == "" {
+				ctx.Fail(fmt.Errorf("expect challenge, but got empty"), 400000, "expect challenge, but got empty")
+				return
+			}
+
+			ctx.JSON(http.StatusOK, zoox.H{
+				"challenge": request.Challenge,
+			})
+
+			return
+		}
+
+		event := bot.Event(&request)
+		go event.OnChatReceiveMessage(func(contentString string, request *feishuEvent.EventRequest, replyx func(content string) error) error {
+			fmt.Println("onChatReceiveMessage: ....")
+
+			if contentString != "" {
 				type Content struct {
 					Text string `json:"text"`
 				}
 				var content Content
-				if err := json.Unmarshal([]byte(*message), &content); err != nil {
+				if err := json.Unmarshal([]byte(contentString), &content); err != nil {
 					return err
 				}
 
@@ -104,15 +164,15 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 
 				fmt.Println("textMessage:", textMessage)
 
-				chatID := *event.Event.Message.ChatId
+				chatID := request.ChatID()
 				var question string
 
 				// group chat
-				if *event.Event.Message.ChatType == "group" {
+				if request.IsGroupChat() {
 					// @
 					if ok := regexp.Match("^@_user_1", textMessage); ok {
-						for _, metion := range event.Event.Message.Mentions {
-							if *metion.Key == "@_user_1" && *metion.Id.OpenId == botInfo.Bot.OpenID {
+						for _, metion := range request.Event.Message.Mentions {
+							if metion.Key == "@_user_1" && metion.ID.OpenID == botInfo.OpenID {
 								question = textMessage[len("@_user_1 "):]
 								break
 							}
@@ -121,7 +181,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 						// command: /chatgpt
 						question = textMessage[len("/chatgpt "):]
 					}
-				} else if *event.Event.Message.ChatType == "p2p" {
+				} else if request.IsP2pChat() {
 					question = textMessage
 				}
 
@@ -135,22 +195,14 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 						// }
 
 						var err error
-						var answer string
-						var response *gpt3.CompletionResponse
+
+						var answer []byte
 						err = retry.Retry(func() error {
-							response, err = client.CompletionWithEngine(context.Background(), gpt3.TextDavinci003Engine, gpt3.CompletionRequest{
-								Prompt: []string{
-									question,
-								},
-								MaxTokens:   gpt3.IntPtr(3000),
-								Temperature: gpt3.Float32Ptr(0),
-							})
+							answer, err = client.Ask([]byte(question))
 							if err != nil {
 								logger.Errorf("failed to request answer: %v", err)
 								return fmt.Errorf("failed to request answer: %v", err)
 							}
-
-							answer = strings.TrimSpace(response.Choices[0].Text)
 
 							return nil
 						}, 5, 3*time.Second)
@@ -163,8 +215,8 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 						}
 
 						logger.Infof("回答：%s", answer)
-						responseMessage := answer
-						if *event.Event.Message.ChatType == "group" {
+						responseMessage := string(answer)
+						if request.IsGroupChat() {
 							responseMessage = fmt.Sprintf("%s\n-------------\n%s", question, answer)
 						}
 
@@ -176,53 +228,9 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 			}
 
 			return nil
-		}).
-		OnP2MessageReadV1(func(ctx context.Context, event *larkim.P2MessageReadV1) error {
-			// 处理消息 event，这里简单打印消息的内容
-			fmt.Println(larkcore.Prettify(event))
-			fmt.Println("OnP2MessageReadV1", event.RequestId())
-			return nil
 		})
 
-	// 注册 http 路由
-	// http.HandleFunc("/webhook/event", httpserverext.NewEventHandlerFunc(handler, larkevent.WithLogLevel(larkcore.LogLevelDebug)))
-	// http.HandleFunc("/bot/feishu", httpserverext.NewEventHandlerFunc(handler, larkevent.WithLogLevel(larkcore.LogLevelDebug)))
-	app.Post("/bot/feishu", func(ctx *zoox.Context) {
-		// body := map[string]interface{}{}
-		// if err := ctx.BindJSON(&body); err != nil {
-		// 	ctx.Fail(err, 500, "Internal Server Error")
-		// 	return
-		// }
-
-		// fmt.PrintJSON(body)
-
-		// ctx.Success(nil)
-		// return
-		if cfg.AsChallenge {
-			type Challenge struct {
-				Challenge string `json:"challenge"`
-			}
-			var c Challenge
-			if err := ctx.BindJSON(&c); err != nil {
-				ctx.Fail(err, 400000, "invalid challenge data")
-				return
-			}
-
-			if c.Challenge == "" {
-				ctx.Fail(fmt.Errorf("expect challenge, but got empty"), 400000, "expect challenge, but got empty")
-				return
-			}
-
-			ctx.JSON(http.StatusOK, zoox.H{
-				"challenge": c.Challenge,
-			})
-			return
-		}
-
-		httpserverext.NewEventHandlerFunc(handler, larkevent.WithLogLevel(larkcore.LogLevelDebug))(
-			ctx.Writer,
-			ctx.Request,
-		)
+		ctx.Success(nil)
 	})
 
 	// 启动 http 服务
