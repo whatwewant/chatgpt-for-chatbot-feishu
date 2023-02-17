@@ -166,6 +166,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 
 				chatID := request.ChatID()
 				var question string
+				fmt.Println("chatID:", chatID)
 
 				// group chat
 				if request.IsGroupChat() {
@@ -198,7 +199,12 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 
 						var answer []byte
 						err = retry.Retry(func() error {
-							answer, err = client.Ask([]byte(question))
+							conversation, err := client.GetOrCreateConversation(chatID, &chatgpt.ConversationConfig{})
+							if err != nil {
+								return fmt.Errorf("failed to get or create conversation by ChatID %s", chatID)
+							}
+
+							answer, err = conversation.Ask([]byte(question))
 							if err != nil {
 								logger.Errorf("failed to request answer: %v", err)
 								return fmt.Errorf("failed to request answer: %v", err)

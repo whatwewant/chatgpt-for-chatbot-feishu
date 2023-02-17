@@ -3,15 +3,13 @@ module github.com/go-zoox/chatgpt-for-feishu-bot
 go 1.19
 
 require (
-	github.com/PullRequestInc/go-gpt3 v1.1.11
-	github.com/go-lark/lark v1.7.4
-	github.com/go-zoox/chatgpt-client v1.0.3
+	github.com/go-zoox/chatgpt-client v1.0.4
 	github.com/go-zoox/cli v1.0.10
-	github.com/go-zoox/core-utils v1.2.2
+	github.com/go-zoox/core-utils v1.2.4
 	github.com/go-zoox/feishu v1.2.1
 	github.com/go-zoox/logger v1.4.0
 	github.com/go-zoox/retry v1.0.3
-	github.com/go-zoox/zoox v1.7.7
+	github.com/go-zoox/zoox v1.7.14
 )
 
 require (
@@ -25,7 +23,7 @@ require (
 	github.com/go-zoox/chalk v1.0.2 // indirect
 	github.com/go-zoox/compress v1.0.1 // indirect
 	github.com/go-zoox/cookie v1.0.2 // indirect
-	github.com/go-zoox/counter v1.0.1 // indirect
+	github.com/go-zoox/counter v1.2.0 // indirect
 	github.com/go-zoox/cron v1.1.2 // indirect
 	github.com/go-zoox/crypto v1.1.8 // indirect
 	github.com/go-zoox/datetime v1.1.1 // indirect
@@ -42,8 +40,8 @@ require (
 	github.com/go-zoox/lru v1.0.1 // indirect
 	github.com/go-zoox/openai-client v1.0.4 // indirect
 	github.com/go-zoox/proxy v1.3.6 // indirect
-	github.com/go-zoox/random v1.0.2 // indirect
-	github.com/go-zoox/ratelimit v1.0.1 // indirect
+	github.com/go-zoox/random v1.0.3 // indirect
+	github.com/go-zoox/ratelimit v1.2.0 // indirect
 	github.com/go-zoox/safe v1.0.1 // indirect
 	github.com/go-zoox/session v1.0.6 // indirect
 	github.com/go-zoox/tag v1.2.0 // indirect
