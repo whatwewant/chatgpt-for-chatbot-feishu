@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   app:
-    # image: whatwewant/chatgpt-for-feishu-bot:v0.0.6
+    # image: whatwewant/chatgpt-for-chatbot-feishu:v0.0.6
     build:
       context: .
     ports:

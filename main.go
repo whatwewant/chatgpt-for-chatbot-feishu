@@ -6,8 +6,8 @@ import (
 
 func main() {
 	app := cli.NewSingleProgram(&cli.SingleProgramConfig{
-		Name:    "chatgpt-for-feishu-bot",
-		Usage:   "chatgpt-for-feishu-bot is a portable chatgpt server",
+		Name:    "chatgpt-for-chatbot-feishu",
+		Usage:   "chatgpt-for-chatbot-feishu is a portable chatgpt server",
 		Version: Version,
 		Flags: []cli.Flag{
 			&cli.IntFlag{

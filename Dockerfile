@@ -16,21 +16,21 @@ RUN GOOS=linux \
   go build \
   -trimpath \
   -ldflags '-w -s -buildid=' \
-  -v -o chatgpt-for-feishu-bot
+  -v -o chatgpt-for-chatbot-feishu
 
 # Server
 FROM whatwewant/go:v1.19-1
 
 LABEL MAINTAINER="Zero<tobewhatwewant@gmail.com>"
 
-LABEL org.opencontainers.image.source="https://github.com/go-zoox/chatgpt-for-feishu-bot"
+LABEL org.opencontainers.image.source="https://github.com/go-zoox/chatgpt-for-chatbot-feishu"
 
 ARG VERSION=latest
 
 ENV MODE=production
 
-COPY --from=builder /build/chatgpt-for-feishu-bot /bin
+COPY --from=builder /build/chatgpt-for-chatbot-feishu /bin
 
 ENV VERSION=${VERSION}
 
-CMD chatgpt-for-feishu-bot server -c /conf/config.yml
+CMD chatgpt-for-chatbot-feishu server -c /conf/config.yml

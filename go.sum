@@ -39,6 +39,8 @@ github.com/go-yaml/yaml v2.1.0+incompatible/go.mod h1:w2MrLa16VYP0jy6N7M5kHaCkaL
 github.com/go-zoox/chalk v1.0.1/go.mod h1:z5+qvE9nEJI5uT4px2tyoFa/xxkqf3CUo22KmXLKbNI=
 github.com/go-zoox/chalk v1.0.2 h1:DCWft37fogmvqF37JdbGSLg28L/tQeA8u0lMvb62KOg=
 github.com/go-zoox/chalk v1.0.2/go.mod h1:z5+qvE9nEJI5uT4px2tyoFa/xxkqf3CUo22KmXLKbNI=
+github.com/go-zoox/chatbot-feishu v1.0.2 h1:nIqXOk4mjyintd8/DTlp+sWcFzHGX3pUUJn5sfwrV+0=
+github.com/go-zoox/chatbot-feishu v1.0.2/go.mod h1:P6mYWk4kf6lC+/GSxIYBvZWzcK3mjiE2Iet6Tw9acJ4=
 github.com/go-zoox/chatgpt-client v1.0.4 h1:e3obwMHK3s+GjA9/L1eTuQuzdcQ3UAd7PWAAbWfNR3c=
 github.com/go-zoox/chatgpt-client v1.0.4/go.mod h1:rGL/hggCjCFfqXHYsL8GHyu5lyHAgCZI4NfIdnWI5JQ=
 github.com/go-zoox/cli v1.0.10 h1:guifbeAJHjhW6m5P+CXQ3ubVO0dqIEq/jhArNUC0930=
@@ -74,6 +76,8 @@ github.com/go-zoox/encoding v1.2.1 h1:38rQRsfL1f1YHZaqsPaGcNMkPnzatnPlYiHioUh9F4
 github.com/go-zoox/encoding v1.2.1/go.mod h1:NdcM7Ln73oVW3vJgx3MH4fJknCcdQfq+NgJ0tuCo7tU=
 github.com/go-zoox/errors v1.0.2 h1:1NLMoEVlDU1+qrvvPj+rrJXOvQPdeZ3DekVBFrI5PFY=
 github.com/go-zoox/errors v1.0.2/go.mod h1:HJ5NKQb9cu3IbI0Jayw7xZiblLBEIglpaIOMxvQnWnk=
+github.com/go-zoox/feishu v1.2.7 h1:8UqvdSJ/AxRXQaXfos2O8Nic+I2C/kncZOums3zBBQc=
+github.com/go-zoox/feishu v1.2.7/go.mod h1:meRzoMvC8jWlPlwYfKgQNABSU+5nnPlhtLODt6t0pJY=
 github.com/go-zoox/fetch v1.3.5/go.mod h1:AkS6v/DlotjmUs+7qJsoFGFkpROr9LVtiKYb000v3Kw=
 github.com/go-zoox/fetch v1.4.4/go.mod h1:WExVnds3HZ1A6jJu9KuqtICfkJpvUdR4uONUnw9TG+0=
 github.com/go-zoox/fetch v1.7.4 h1:kNcqBldXSB40dToLYveuNFSqtkMbd2U0ZrYmPQGmo9E=
@@ -212,7 +216,6 @@ github.com/spf13/cast v1.5.0 h1:rj3WzYc11XZaIZMPKmwP96zkFEnnAmV8s6XbB2aY32w=
 github.com/spf13/cast v1.5.0/go.mod h1:SpXXQ5YoyJw6s3/6cMTQuxvgRl3PCJiyaX9p6b155UU=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.4.0/go.mod h1:YvHI0jy2hoMjB+UWwv71VJQ9isScKT/TqJzVSSt89Yw=
-github.com/stretchr/objx v0.5.0/go.mod h1:Yh+to48EsGEfYuaHDzXPcE3xhTkx73EhmCGUpEOglKo=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
 github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5cxcmMvtA=
 github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
@@ -220,7 +223,6 @@ github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/
 github.com/stretchr/testify v1.7.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.8.0/go.mod h1:yNjHg4UonilssWZ8iaSj1OCr/vHnekPRkoO+kdMU+MU=
 github.com/stretchr/testify v1.8.1 h1:w7B6lhMri9wdJUVmEZPGGhZzrYTPvgJArz7wNPgYKsk=
-github.com/stretchr/testify v1.8.1/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
 github.com/tidwall/gjson v1.14.0/go.mod h1:/wbyibRr2FHMks5tjHJ5F8dMZh3AcwJEMf5vlfC0lxk=
 github.com/tidwall/gjson v1.14.1/go.mod h1:/wbyibRr2FHMks5tjHJ5F8dMZh3AcwJEMf5vlfC0lxk=
 github.com/tidwall/gjson v1.14.2/go.mod h1:/wbyibRr2FHMks5tjHJ5F8dMZh3AcwJEMf5vlfC0lxk=
