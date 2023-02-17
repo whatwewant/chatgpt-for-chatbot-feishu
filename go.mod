@@ -67,8 +67,3 @@ require (
 	golang.org/x/text v0.7.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 )
-
-// replace github.com/go-zoox/feishu => ../feishu
-
-// replace github.com/go-zoox/zoox => ../zoox
-// replace github.com/go-zoox/logger => ../logger
