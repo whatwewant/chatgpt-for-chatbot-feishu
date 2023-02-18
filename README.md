@@ -37,19 +37,22 @@
 ### 一键部署（推荐）
 
 ```bash
-# 基于 Zmicro/Docker
+# 基于服务端管理框架 Zmicro，自动安装缺失依赖，底层容器使用 Docker
 # 执行下面脚本，并按提示操作，填写飞书 APP ID/Secret 和 OpenAI/ChatGPT API TOKEN
 $ curl -o- https://raw.githubusercontent.com/zmicro-design/service-chatgpt-for-chatbot-feishu/master/install | bash
 
 # 查看日志
 $ zmicro service logs chatgpt-for-chatbot-feishu
+
+# 关闭服务
+$ zmicro service stop chatgpt-for-chatbot-feishu
 ```
 
 ### 二进制
 
 ```bash
-# 安装 Zmicro
-$ curl -o* https://raw.githubusercontent.com/zcorky/zmicro/master/install | bash
+# 安装服务器管理框架 Zmicro
+$ curl -o- https://raw.githubusercontent.com/zcorky/zmicro/master/install | bash
 
 # 安装 chatgpt-for-chatbot-feishu
 $ zmicro package install chatgpt-for-chatbot-feishu
@@ -59,7 +62,7 @@ $ export APP_ID=<YOUR_FEISHU_APP_ID>
 $ export APP_SECRET=<YOUR_FEISHU_APP_SECRET>
 $ export CHATGPT_API_KEY=<YOUR_CHATGPT_API_TOKEN>
 
-# 启动服务
+# 运行
 $ zmicro chatgpt-for-chatbot-feishu
 ```
 
