@@ -15,7 +15,7 @@
 * [x] 支持私人对话
 * [x] 支持群聊
   * [x] 支持 @ 机器人回复
-  * [x] 也支持命令（`/chatgpt`）触发，格式：`/chatgpt 你的聊天内容`
+  * [x] 也支持命令（`/chatgpt`）触发，格式：`/chatgpt 你的问题`
 * [ ] 支持配置启动反向代理
   * ngrok
   * [cpolar](https://dashboard.cpolar.com/)
