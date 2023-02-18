@@ -18,6 +18,12 @@ func main() {
 				Value:   8080,
 			},
 			&cli.StringFlag{
+				Name:    "api-path",
+				Usage:   "custom api path, default: /",
+				EnvVars: []string{"PATH"},
+				Value:   "/",
+			},
+			&cli.StringFlag{
 				Name:     "chatgpt-api-key",
 				Usage:    "ChatGPT API Key",
 				EnvVars:  []string{"CHATGPT_API_KEY"},
@@ -56,6 +62,7 @@ func main() {
 	app.Command(func(ctx *cli.Context) (err error) {
 		return ServeFeishuBot(&FeishuBotConfig{
 			Port:              ctx.Int64("port"),
+			Path:              ctx.String("api-path"),
 			ChatGPTAPIKey:     ctx.String("chatgpt-api-key"),
 			AppID:             ctx.String("app-id"),
 			AppSecret:         ctx.String("app-secret"),

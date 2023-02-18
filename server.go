@@ -19,6 +19,7 @@ import (
 
 type FeishuBotConfig struct {
 	Port              int64
+	Path              string
 	ChatGPTAPIKey     string
 	AppID             string
 	AppSecret         string
@@ -53,6 +54,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 
 	feishuchatbot, err := chatbot.New(&chatbot.Config{
 		Port:      cfg.Port,
+		Path:      cfg.Path,
 		AppID:     cfg.AppID,
 		AppSecret: cfg.AppSecret,
 	}, func(contentString string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
