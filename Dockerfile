@@ -1,5 +1,5 @@
 # Builder
-FROM whatwewant/builder-go:v1.19-1 as builder
+FROM whatwewant/builder-go:v1.20-1 as builder
 
 WORKDIR /build
 
@@ -19,7 +19,7 @@ RUN GOOS=linux \
   -v -o chatgpt-for-chatbot-feishu
 
 # Server
-FROM whatwewant/go:v1.19-1
+FROM whatwewant/go:v1.20-1
 
 LABEL MAINTAINER="Zero<tobewhatwewant@gmail.com>"
 

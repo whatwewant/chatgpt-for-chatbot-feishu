@@ -1,6 +1,6 @@
 module github.com/go-zoox/chatgpt-for-chatbot-feishu
 
-go 1.19
+go 1.20
 
 require (
 	github.com/go-zoox/chatbot-feishu v1.0.7
