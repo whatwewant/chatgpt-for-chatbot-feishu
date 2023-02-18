@@ -2,6 +2,7 @@
 
 > 快速将 ChatGPT 接入飞书，作为私人工作助理或者企业员工助理
 
+[TOC]
 
 ## 预览
 ![](./docs/assets/images/chatgpt.chat.group.png)
