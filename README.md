@@ -145,10 +145,11 @@ $ docker-compose up -d
 
 ### 更多交流
 
-可以创建 Issue 或者加微信，备注来自：ChatGPT-For-ChatBot-Feishu，进入微信群沟通
+可以创建 Issue 或者加微信，备注来自：ChatGPT-For-ChatBot-Feishu，进入微信群/飞书群沟通
 
 <p align="center">
   <img src="./docs/assets/images/wechat.qrcode.jpeg" alt="" width="300" />
+  <img src="./docs/assets/images/feishu.qrcode.jpeg" alt="" width="300" />
 </p>
 
 ### 相关资源
