@@ -34,13 +34,12 @@ github.com/go-playground/validator/v10 v10.11.0 h1:0W+xRM511GY47Yy3bZUbJVitCNg2B
 github.com/go-redis/redis/v8 v8.11.5 h1:AcZZR7igkdvfVmQTPnu9WE37LRrO/YrBH5zWyjDC0oI=
 github.com/go-redis/redis/v8 v8.11.5/go.mod h1:gREzHqY1hg6oD9ngVRbLStwAWKhA0FEgq8Jd4h5lpwo=
 github.com/go-task/slim-sprig v0.0.0-20210107165309-348f09dbbbc0/go.mod h1:fyg7847qk6SyHyPtNmDHnmrv/HOrqktSC+C9fM+CJOE=
-github.com/go-yaml/yaml v2.1.0+incompatible h1:RYi2hDdss1u4YE7GwixGzWwVo47T8UQwnTLB6vQiq+o=
 github.com/go-yaml/yaml v2.1.0+incompatible/go.mod h1:w2MrLa16VYP0jy6N7M5kHaCkaLENm+P+Tv+MfurjSw0=
 github.com/go-zoox/chalk v1.0.1/go.mod h1:z5+qvE9nEJI5uT4px2tyoFa/xxkqf3CUo22KmXLKbNI=
 github.com/go-zoox/chalk v1.0.2 h1:DCWft37fogmvqF37JdbGSLg28L/tQeA8u0lMvb62KOg=
 github.com/go-zoox/chalk v1.0.2/go.mod h1:z5+qvE9nEJI5uT4px2tyoFa/xxkqf3CUo22KmXLKbNI=
-github.com/go-zoox/chatbot-feishu v1.0.4 h1:pm3gRK/zTqbDQGWnBNSbFpI6klxCJDGnVldWkgNPlSY=
-github.com/go-zoox/chatbot-feishu v1.0.4/go.mod h1:X+lL/7uG5B8Sii21woLCs84PU+h98gktJHZIyX81OMU=
+github.com/go-zoox/chatbot-feishu v1.0.5 h1:1nAVeWpEj54FRumSW2Icwjfzq3NR7r2QP7FllNIkVXk=
+github.com/go-zoox/chatbot-feishu v1.0.5/go.mod h1:tbh01lrUeUjPHd6FVT9PpBxuZywDpBXEALf9RLjALoM=
 github.com/go-zoox/chatgpt-client v1.0.9 h1:DrVIDoRO8NTJlewa9AITeZAg/sRuHSMvcer6SAJSWVs=
 github.com/go-zoox/chatgpt-client v1.0.9/go.mod h1:d4Ji6YkOZF2HZv/dhoeXPSIJ7n92QVYiI3kT0RmdTms=
 github.com/go-zoox/cli v1.0.10 h1:guifbeAJHjhW6m5P+CXQ3ubVO0dqIEq/jhArNUC0930=
@@ -132,8 +131,8 @@ github.com/go-zoox/testify v1.0.0 h1:zXuj+JMcudM/dWk8HgMfCKpGYDcyHbTUBGxH35SGubU
 github.com/go-zoox/uuid v0.0.1 h1:txqmDavRTq68gzzqWfJQLorFyUp9a7M2lmq2KcwPGPA=
 github.com/go-zoox/uuid v0.0.1/go.mod h1:0/F4LdfLqFdyqOf7aXoiYXRkXHU324JQ5DZEytXYBPM=
 github.com/go-zoox/zoox v1.2.19/go.mod h1:xk3S3L58ugJIDyuZMCYrj3qIGLSxddbkARwTRkpxPVE=
-github.com/go-zoox/zoox v1.7.14 h1:+fzv9cQI4G17qCnrcXyLvzrt2PgRL0Fo8Qw+bycEfgg=
-github.com/go-zoox/zoox v1.7.14/go.mod h1:Be3DwaYRzQlC+cZwosXEVAcd2gei8Nk6x0v0zNEd5uQ=
+github.com/go-zoox/zoox v1.7.16 h1:4xxZBo2TRVuKqqoFk8KdZZy9o+E9pxL+KLg2+23TxFI=
+github.com/go-zoox/zoox v1.7.16/go.mod h1:NUtkLL0b2Jm1XLhpPFSVTKw99O9cuQeUOv2u3aSCNP0=
 github.com/goccy/go-yaml v1.9.5/go.mod h1:U/jl18uSupI5rdI2jmuCswEA2htH9eXfferR3KfscvA=
 github.com/goccy/go-yaml v1.9.8 h1:5gMyLUeU1/6zl+WFfR1hN7D2kf+1/eRGa7DFtToiBvQ=
 github.com/goccy/go-yaml v1.9.8/go.mod h1:JubOolP3gh0HpiBc4BLRD4YmjEjHAmIIB2aaXKkTfoE=

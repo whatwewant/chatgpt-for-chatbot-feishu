@@ -33,4 +33,4 @@ COPY --from=builder /build/chatgpt-for-chatbot-feishu /bin
 
 ENV VERSION=${VERSION}
 
-CMD chatgpt-for-chatbot-feishu server -c /conf/config.yml
+CMD chatgpt-for-chatbot-feishu

@@ -3,7 +3,7 @@ module github.com/go-zoox/chatgpt-for-chatbot-feishu
 go 1.19
 
 require (
-	github.com/go-zoox/chatbot-feishu v1.0.4
+	github.com/go-zoox/chatbot-feishu v1.0.5
 	github.com/go-zoox/chatgpt-client v1.0.9
 	github.com/go-zoox/cli v1.0.10
 	github.com/go-zoox/core-utils v1.2.6
@@ -19,7 +19,6 @@ require (
 	github.com/fatih/color v1.14.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
-	github.com/go-yaml/yaml v2.1.0+incompatible // indirect
 	github.com/go-zoox/chalk v1.0.2 // indirect
 	github.com/go-zoox/compress v1.0.1 // indirect
 	github.com/go-zoox/cookie v1.0.2 // indirect
@@ -46,7 +45,7 @@ require (
 	github.com/go-zoox/session v1.0.6 // indirect
 	github.com/go-zoox/tag v1.2.0 // indirect
 	github.com/go-zoox/uuid v0.0.1 // indirect
-	github.com/go-zoox/zoox v1.7.14 // indirect
+	github.com/go-zoox/zoox v1.7.16 // indirect
 	github.com/goccy/go-yaml v1.9.8 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
@@ -66,4 +65,5 @@ require (
 	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
