@@ -3,11 +3,11 @@ module github.com/go-zoox/chatgpt-for-chatbot-feishu
 go 1.19
 
 require (
-	github.com/go-zoox/chatbot-feishu v1.0.2
-	github.com/go-zoox/chatgpt-client v1.0.6
+	github.com/go-zoox/chatbot-feishu v1.0.4
+	github.com/go-zoox/chatgpt-client v1.0.9
 	github.com/go-zoox/cli v1.0.10
 	github.com/go-zoox/core-utils v1.2.6
-	github.com/go-zoox/feishu v1.2.7
+	github.com/go-zoox/feishu v1.3.3
 	github.com/go-zoox/logger v1.4.0
 	github.com/go-zoox/retry v1.0.3
 )

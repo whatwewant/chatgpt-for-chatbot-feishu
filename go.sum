@@ -39,10 +39,10 @@ github.com/go-yaml/yaml v2.1.0+incompatible/go.mod h1:w2MrLa16VYP0jy6N7M5kHaCkaL
 github.com/go-zoox/chalk v1.0.1/go.mod h1:z5+qvE9nEJI5uT4px2tyoFa/xxkqf3CUo22KmXLKbNI=
 github.com/go-zoox/chalk v1.0.2 h1:DCWft37fogmvqF37JdbGSLg28L/tQeA8u0lMvb62KOg=
 github.com/go-zoox/chalk v1.0.2/go.mod h1:z5+qvE9nEJI5uT4px2tyoFa/xxkqf3CUo22KmXLKbNI=
-github.com/go-zoox/chatbot-feishu v1.0.2 h1:nIqXOk4mjyintd8/DTlp+sWcFzHGX3pUUJn5sfwrV+0=
-github.com/go-zoox/chatbot-feishu v1.0.2/go.mod h1:P6mYWk4kf6lC+/GSxIYBvZWzcK3mjiE2Iet6Tw9acJ4=
-github.com/go-zoox/chatgpt-client v1.0.6 h1:NCqOgZUl2Fwiw1qGl40/5BmJR9k7eM+qrmTNWIfm+qc=
-github.com/go-zoox/chatgpt-client v1.0.6/go.mod h1:d4Ji6YkOZF2HZv/dhoeXPSIJ7n92QVYiI3kT0RmdTms=
+github.com/go-zoox/chatbot-feishu v1.0.4 h1:pm3gRK/zTqbDQGWnBNSbFpI6klxCJDGnVldWkgNPlSY=
+github.com/go-zoox/chatbot-feishu v1.0.4/go.mod h1:X+lL/7uG5B8Sii21woLCs84PU+h98gktJHZIyX81OMU=
+github.com/go-zoox/chatgpt-client v1.0.9 h1:DrVIDoRO8NTJlewa9AITeZAg/sRuHSMvcer6SAJSWVs=
+github.com/go-zoox/chatgpt-client v1.0.9/go.mod h1:d4Ji6YkOZF2HZv/dhoeXPSIJ7n92QVYiI3kT0RmdTms=
 github.com/go-zoox/cli v1.0.10 h1:guifbeAJHjhW6m5P+CXQ3ubVO0dqIEq/jhArNUC0930=
 github.com/go-zoox/cli v1.0.10/go.mod h1:e26mNwc/G1eM6TjoBs2/0PRZTj7NZtoO0WZDXtg82iY=
 github.com/go-zoox/compress v1.0.1 h1:EyNxo5NscMLua5fvUdiGSF+BwhuTfMeyppu7OwKAW7Q=
@@ -76,8 +76,8 @@ github.com/go-zoox/encoding v1.2.1 h1:38rQRsfL1f1YHZaqsPaGcNMkPnzatnPlYiHioUh9F4
 github.com/go-zoox/encoding v1.2.1/go.mod h1:NdcM7Ln73oVW3vJgx3MH4fJknCcdQfq+NgJ0tuCo7tU=
 github.com/go-zoox/errors v1.0.2 h1:1NLMoEVlDU1+qrvvPj+rrJXOvQPdeZ3DekVBFrI5PFY=
 github.com/go-zoox/errors v1.0.2/go.mod h1:HJ5NKQb9cu3IbI0Jayw7xZiblLBEIglpaIOMxvQnWnk=
-github.com/go-zoox/feishu v1.2.7 h1:8UqvdSJ/AxRXQaXfos2O8Nic+I2C/kncZOums3zBBQc=
-github.com/go-zoox/feishu v1.2.7/go.mod h1:meRzoMvC8jWlPlwYfKgQNABSU+5nnPlhtLODt6t0pJY=
+github.com/go-zoox/feishu v1.3.3 h1:3/wUNjJhrL8p5p0JO1HmMPk0OYRdNBqyWzdhf96pX7Y=
+github.com/go-zoox/feishu v1.3.3/go.mod h1:meRzoMvC8jWlPlwYfKgQNABSU+5nnPlhtLODt6t0pJY=
 github.com/go-zoox/fetch v1.3.5/go.mod h1:AkS6v/DlotjmUs+7qJsoFGFkpROr9LVtiKYb000v3Kw=
 github.com/go-zoox/fetch v1.4.4/go.mod h1:WExVnds3HZ1A6jJu9KuqtICfkJpvUdR4uONUnw9TG+0=
 github.com/go-zoox/fetch v1.7.4 h1:kNcqBldXSB40dToLYveuNFSqtkMbd2U0ZrYmPQGmo9E=

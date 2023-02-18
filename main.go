@@ -45,6 +45,11 @@ func main() {
 				Usage:   "enable token verification if you need",
 				EnvVars: []string{"VERIFICATION_TOKEN"},
 			},
+			&cli.StringFlag{
+				Name:    "report-url",
+				Usage:   "Set error report url",
+				EnvVars: []string{"REPORT_URL"},
+			},
 		},
 	})
 
@@ -56,6 +61,7 @@ func main() {
 			AppSecret:         ctx.String("app-secret"),
 			EncryptKey:        ctx.String("encrypt-key"),
 			VerificationToken: ctx.String("verification-token"),
+			ReportURL:         ctx.String("report-url"),
 		})
 	})
 

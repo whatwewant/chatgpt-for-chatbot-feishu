@@ -24,6 +24,8 @@ type FeishuBotConfig struct {
 	AppSecret         string
 	EncryptKey        string
 	VerificationToken string
+	//
+	ReportURL string
 }
 
 func ServeFeishuBot(cfg *FeishuBotConfig) error {
@@ -100,16 +102,22 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 
 				var answer []byte
 				err = retry.Retry(func() error {
-					conversation, err := client.GetOrCreateConversation(request.ChatID(), &chatgpt.ConversationConfig{})
+					conversation, err := client.GetOrCreateConversation(request.ChatID(), &chatgpt.ConversationConfig{
+						MaxMessages: 50,
+					})
 					if err != nil {
 						return fmt.Errorf("failed to get or create conversation by ChatID %s", request.ChatID())
 					}
 
-					answer, err = conversation.Ask([]byte(question))
+					answer, err = conversation.Ask([]byte(question), &chatgpt.ConversationAskConfig{
+						User: request.Sender().SenderID.UserID,
+					})
 					if err != nil {
 						logger.Errorf("failed to request answer: %v", err)
 						return fmt.Errorf("failed to request answer: %v", err)
 					}
+
+					fmt.Println("ask 2222:", string(answer), err)
 
 					return nil
 				}, 5, 3*time.Second)
