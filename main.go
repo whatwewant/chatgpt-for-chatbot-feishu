@@ -20,7 +20,7 @@ func main() {
 			&cli.StringFlag{
 				Name:    "api-path",
 				Usage:   "custom api path, default: /",
-				EnvVars: []string{"PATH"},
+				EnvVars: []string{"API_PATH"},
 				Value:   "/",
 			},
 			&cli.StringFlag{

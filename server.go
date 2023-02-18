@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-zoox/core-utils/fmt"
 	"github.com/go-zoox/feishu"
+	mc "github.com/go-zoox/feishu/message/content"
 
 	chatgpt "github.com/go-zoox/chatgpt-client"
 	feishuEvent "github.com/go-zoox/feishu/event"
@@ -58,6 +59,8 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 		AppID:     cfg.AppID,
 		AppSecret: cfg.AppSecret,
 	}, func(contentString string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
+		fmt.PrintJSON(request)
+
 		// empty message
 		if strings.TrimSpace(contentString) == "" {
 			return nil
@@ -123,25 +126,17 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 				}, 5, 3*time.Second)
 				if err != nil {
 					logger.Errorf("failed to get answer: %v", err)
-					content, err := json.Marshal(map[string]any{
-						"zh_cn": map[string]any{
-							"title": "",
-							"content": [][]map[string]any{
-								{
-									{
-										"tag":       "text",
-										"un_escape": true,
-										"text":      "ChatGPT 繁忙，请稍后重试",
-									},
-								},
-							},
-						},
-					})
+					msgType, content, err := mc.
+						NewContent().
+						Text(&mc.ContentTypeText{
+							Text: "ChatGPT 繁忙，请稍后重试",
+						}).
+						Build()
 					if err != nil {
-						logger.Errorf("failed to marshal content: %v", err)
+						logger.Errorf("failed to build content: %v", err)
 						return
 					}
-					if err := reply(string(content), "post"); err != nil {
+					if err := reply(string(content), msgType); err != nil {
 						return
 					}
 					return
@@ -153,26 +148,27 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 					responseMessage = fmt.Sprintf("%s\n-------------\n%s", question, answer)
 				}
 
-				content, err := json.Marshal(map[string]any{
-					"zh_cn": map[string]any{
-						"title": "",
-						"content": [][]map[string]any{
-							{
+				msgType, content, err := mc.
+					NewContent().
+					Post(&mc.ContentTypePost{
+						ZhCN: &mc.ContentTypePostBody{
+							Content: [][]mc.ContentTypePostBodyItem{
 								{
-									"tag":       "text",
-									"un_escape": true,
-									"text":      responseMessage,
+									{
+										Tag:      "text",
+										UnEscape: true,
+										Text:     responseMessage,
+									},
 								},
 							},
 						},
-					},
-				})
+					}).
+					Build()
 				if err != nil {
-					logger.Errorf("failed to marshal content: %v", err)
+					logger.Errorf("failed to build content: %v", err)
 					return
 				}
-
-				if err := reply(string(content), "post"); err != nil {
+				if err := reply(string(content), msgType); err != nil {
 					logger.Errorf("failed to reply: %v", err)
 					return
 				}
