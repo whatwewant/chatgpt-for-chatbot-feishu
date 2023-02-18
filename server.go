@@ -119,8 +119,6 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 						return fmt.Errorf("failed to request answer: %v", err)
 					}
 
-					fmt.Println("ask 2222:", string(answer), err)
-
 					return nil
 				}, 5, 3*time.Second)
 				if err != nil {
