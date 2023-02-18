@@ -124,6 +124,8 @@ $ docker-compose up -d
 
 * S3. 发布版本，等待企业管理员审核通过
 
+更多飞书配置可参考 [Leizhenpeng/feishu-chatGpt](https://github.com/Leizhenpeng/feishu-chatGpt/blob/master/readme.md)、[bestony/ChatGPT-Feishu](https://github.com/bestony/ChatGPT-Feishu) 文档
+
 ### 更多交流
 
 可以加我微信，备注来自：ChatGPT-For-ChatBot-Feishu，进入微信群沟通
@@ -132,18 +134,23 @@ $ docker-compose up -d
   <img src="./docs/assets/images/wechat.qrcode.jpeg" alt="" width="300" />
 </p>
 
-### 参考
-* [transitive-bullshit/chatgpt-api](https://github.com/transitive-bullshit/chatgpt-api)
+### 相关资源
+* [transitive-bullshit/chatgpt-api](https://github.com/transitive-bullshit/chatgpt-api) - 一个 Node.js 实现的 ChatGPT Client SDK
 
-* [Leizhenpeng/feishu-chatGpt](https://github.com/Leizhenpeng/feishu-chatGpt/blob/master/readme.md)
+* [Leizhenpeng/feishu-chatGpt](https://github.com/Leizhenpeng/feishu-chatGpt/blob/master/readme.md) - 在飞书上与ChatGPT随时对话
 
-* [bestony/ChatGPT-Feishu](https://github.com/bestony/ChatGPT-Feishu)
+* [bestony/ChatGPT-Feishu](https://github.com/bestony/ChatGPT-Feishu) - 给飞书准备的 ChatGPT 机器人
 
-* [ChatGPT Client](https://github.com/go-zoox/chatgpt-client)
+* [ChatGPT Client](https://github.com/go-zoox/chatgpt-client) - 一个 Go 语言实现的 ChatGPT Client SDK
 
-* [ChatBot Feishu](https://github.com/go-zoox/chatbot-feishu)
+* [ChatBot Feishu](https://github.com/go-zoox/chatbot-feishu) - 一个 Go 语言实现的飞书机器人框架
 
-* [Feishu SDK](https://github.com/go-zoox/feishu)
+* [Feishu SDK](https://github.com/go-zoox/feishu) - 一个 Go 语言实现的飞书 SDK
 
-* [OpenAI Client](https://github.com/go-zoox/openai-client)
+* [OpenAI Client](https://github.com/go-zoox/openai-client) - 一个 Go 语言实现的 OpenAI Client SDK
 
+* [Zmicro](https://github.com/zcorky/zmicro) - 一个原生 Shell 实现的、强大的跨平台服务器管理框架，快速开发各种 CLI 插件、服务以及包管理等
+
+* [zmicro-design/service-chatgpt-for-chatbot-feishu](https://github.com/zmicro-design/service-chatgpt-for-chatbot-feishu) - ChatGPT-for-ChatBot-Feishu 的 zmicro service 实现
+
+* [zmicro-design/package-chatgpt-for-chatbot-feishu](https://github.com/zmicro-design/service-chatgpt-for-chatbot-feishu) - ChatGPT-for-ChatBot-Feishu 的 zmicro package 实现
