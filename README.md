@@ -42,7 +42,13 @@
 $ curl -o- https://raw.githubusercontent.com/zmicro-design/service-chatgpt-for-chatbot-feishu/master/install | bash
 
 # 查看日志
-$ zmicro service logs chatgpt-for-chatbot-feishu
+$ zmicro service logs chatgpt-for-chatbot-feishu -f
+
+# 修改配置 
+$ zmicro service edit config chatgpt-for-chatbot-feishu
+
+# 重启服务
+$ zmicro service restart chatgpt-for-chatbot-feishu
 
 # 关闭服务
 $ zmicro service stop chatgpt-for-chatbot-feishu
