@@ -134,7 +134,7 @@ $ docker-compose up -d
 
 ### 更多交流
 
-可以加我微信，备注来自：ChatGPT-For-ChatBot-Feishu，进入微信群沟通
+可以创建 Issue 或者加微信，备注来自：ChatGPT-For-ChatBot-Feishu，进入微信群沟通
 
 <p align="center">
   <img src="./docs/assets/images/wechat.qrcode.jpeg" alt="" width="300" />
