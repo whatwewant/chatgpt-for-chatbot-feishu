@@ -59,7 +59,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 		AppID:     cfg.AppID,
 		AppSecret: cfg.AppSecret,
 	}, func(contentString string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
-		fmt.PrintJSON(request)
+		// fmt.PrintJSON(request)
 
 		// empty message
 		if strings.TrimSpace(contentString) == "" {
