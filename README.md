@@ -38,7 +38,7 @@
 
 ```bash
 # 基于服务端管理框架 Zmicro，自动安装缺失依赖，底层容器使用 Docker
-# 执行下面脚本，并按提示操作，填写飞书 APP ID/Secret 和 OpenAI/ChatGPT API TOKEN
+# 执行下面脚本，并按提示操作，填写飞书 APP ID/Secret 和 OpenAI/ChatGPT API Key
 $ curl -o- https://raw.githubusercontent.com/zmicro-design/service-chatgpt-for-chatbot-feishu/master/install | bash
 
 # 查看日志
@@ -57,10 +57,10 @@ $ curl -o- https://raw.githubusercontent.com/zcorky/zmicro/master/install | bash
 # 安装 chatgpt-for-chatbot-feishu
 $ zmicro package install chatgpt-for-chatbot-feishu
 
-# 准备环境飞书 APP ID/Secret 和 OpenAI/ChatGPT API TOKEN
+# 准备环境飞书 APP ID/Secret 和 OpenAI/ChatGPT API Key
 $ export APP_ID=<YOUR_FEISHU_APP_ID>
 $ export APP_SECRET=<YOUR_FEISHU_APP_SECRET>
-$ export CHATGPT_API_KEY=<YOUR_CHATGPT_API_TOKEN>
+$ export CHATGPT_API_KEY=<YOUR_CHATGPT_API_KEY>
 
 # 运行
 $ zmicro chatgpt-for-chatbot-feishu
@@ -74,13 +74,13 @@ version: "3.7"
 
 services:
   chatgpt-for-chatbot-feishu:
-  image: whatwewant/chatgpt-for-chatbot-feishu@latest
-  port:
+  image: whatwewant/chatgpt-for-chatbot-feishu:latest
+  ports:
     - 8080:8080
   environment:
     APP_ID: "<YOUR_FEISHU_APP_ID>"
     APP_SECRET: "<YOUR_FEISHU_APP_SECRET>"
-    CHATGPT_API_KEY: "<YOUR_CHATGPT_API_TOKEN>"
+    CHATGPT_API_KEY: "<YOUR_CHATGPT_API_KEY>"
 ```
 
 ```bash
@@ -98,7 +98,7 @@ $ docker-compose up -d
 
 **新人推荐先看飞书开放平台文档: [飞书如何开发企业自建应用](https://www.feishu.cn/hc/zh-CN/articles/360049067916)**
 
-*  S1. 获取 [OpenAI](https://platform.openai.com/account/api-keys) 的 API TOKEN
+*  S1. 获取 [OpenAI](https://platform.openai.com/account/api-keys) 的 API Key
 *  S2. 创建 [飞书](https://open.feishu.cn/) 机器人
     1. 前往[开发者平台](https://open.feishu.cn/app?lang=zh-CN)创建应用,并获取到 AppID 和 AppSecret
     2. 前往`添加应用能力` => `机器人`, 创建机器人
