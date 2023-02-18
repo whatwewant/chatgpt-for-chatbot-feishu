@@ -135,6 +135,8 @@ $ docker-compose up -d
 </p>
 
 ### 相关资源
+* [go-zoox/gzchatgpt](https://github.com/go-zoox/gzchatgpt) - ChatGPT CLI Demo
+
 * [transitive-bullshit/chatgpt-api](https://github.com/transitive-bullshit/chatgpt-api) - 一个 Node.js 实现的 ChatGPT Client SDK
 
 * [Leizhenpeng/feishu-chatGpt](https://github.com/Leizhenpeng/feishu-chatGpt/blob/master/readme.md) - 在飞书上与ChatGPT随时对话
