@@ -50,19 +50,8 @@
 ```bash
 # 基于服务端管理框架 Zmicro，自动安装缺失依赖，使用 Zmicro Service，底层容器使用 Docker
 # 执行下面脚本，并按提示操作，填写飞书 APP ID/Secret 和 OpenAI/ChatGPT API Key
+# 更多用法，注意看提示
 $ curl -o- https://raw.githubusercontent.com/zmicro-design/service-chatgpt-for-chatbot-feishu/master/install | bash
-
-# 查看日志
-$ zmicro service logs chatgpt-for-chatbot-feishu -f
-
-# 修改配置 
-$ zmicro service edit config chatgpt-for-chatbot-feishu
-
-# 重启服务
-$ zmicro service restart chatgpt-for-chatbot-feishu
-
-# 关闭服务
-$ zmicro service stop chatgpt-for-chatbot-feishu
 ```
 
 ### 二进制
