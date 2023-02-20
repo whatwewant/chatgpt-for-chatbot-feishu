@@ -35,6 +35,8 @@ ENV VERSION=${VERSION}
 
 RUN zmicro package install ngrok
 
+RUN zmicro package install cpolar
+
 COPY ./entrypoint.sh /
 
 CMD /entrypoint.sh
