@@ -13,6 +13,7 @@
 * [五、飞书应用配置和 OpenAI 相关步骤](#飞书应用配置和-openai-相关步骤)
 * [六、更多交流](#更多交流)
 * [七、相关资源](#相关资源)
+* [八、商业服务](#商业服务)
 
 ## 预览
 ![](./docs/assets/images/chatgpt.chat.group.png)
@@ -163,3 +164,10 @@ $ docker-compose up -d
 * [Zmicro Service | Chatgpt-for-ChatBot-Feishu](https://github.com/zmicro-design/service-chatgpt-for-chatbot-feishu) - ChatGPT-for-ChatBot-Feishu 的 zmicro service 实现
 
 * [Zmicro Package | Chatgpt-for-ChatBot-Feishu](https://github.com/zmicro-design/service-chatgpt-for-chatbot-feishu) - ChatGPT-for-ChatBot-Feishu 的 zmicro package 实现
+
+### 商业服务
+* 联系上面的微信，付费提供技术支持服务，快速接入，有需要的请加微信沟通。
+
+<p align="center">
+  <img src="./docs/assets/images/wechat.qrcode.jpeg" alt="" width="300" />
+</p>
