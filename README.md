@@ -1,6 +1,6 @@
 # ChatGPT For ChatBot Feishu
 
-> 快速将 ChatGPT 接入飞书，作为私人工作助理或者企业员工助理
+> 快速将 ChatGPT 接入飞书，基于 [OpenAI 官方接口](https://platform.openai.com/account/api-keys)，作为私人工作助理或者企业员工助理
 
 * [一、预览](#预览)
 * [二、功能支持](#功能支持)
