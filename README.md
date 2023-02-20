@@ -29,9 +29,9 @@
   * [x] 支持 @ 机器人回复
   * [x] 也支持命令（`/chatgpt`）触发，格式：`/chatgpt 你的问题`
 * [x] 支持配置启动反向代理
-  * [] [cpolar](https://www.cpolar.com/)
-  * [] [natapp](https://natapp.cn/)
+  * [x] [cpolar](https://www.cpolar.com/)
   * [x] [ngrok](https://ngrok.com/)
+  * [natapp](https://natapp.cn/)
 * [ ] 支持二次开发，快速接入企业现有应用
   * Go 开发框架
     * [x] [Go-Zoox](https://github.com/go-zoox/zoox)
