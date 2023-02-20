@@ -1,12 +1,8 @@
-version: '3.7'
-
 services:
   app:
-    # image: whatwewant/chatgpt-for-chatbot-feishu:v0.0.6
     build:
       context: .
-    ports:
-      - 0.0.0.0:6666:6666
-    # command: sleep infinity
-    volumes:
-      - ./conf:/conf
+    environment:
+      CHATGPT_API_KEY: ${CHATGPT_API_KEY}
+      NGROK_ENABLE: "true"
+    

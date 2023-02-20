@@ -33,4 +33,8 @@ COPY --from=builder /build/chatgpt-for-chatbot-feishu /bin
 
 ENV VERSION=${VERSION}
 
-CMD chatgpt-for-chatbot-feishu
+RUN zmicro package install ngrok
+
+COPY ./entrypoint.sh /
+
+CMD /entrypoint.sh
