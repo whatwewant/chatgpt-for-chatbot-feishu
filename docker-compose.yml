@@ -9,6 +9,6 @@ services:
       APP_SECRET: ${APP_SECRET}
       # NGROK_ENABLE: "true"
       CPOLAR_ENABLE: "true"
-      CPOLAR_AUTH_TOKEN: ${CPOLAR_AUTH_TOKEN}
+      tunnel_auth_token: ${tunnel_auth_token}
     volumes:
       - ./entrypoint.sh:/entrypoint.sh
