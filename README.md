@@ -10,10 +10,11 @@
   * [二进制](#二进制)
   * [Docker Compose](#docker-compose)
   * [二次开发](#二次开发)
-* [五、飞书应用配置和 OpenAI 相关步骤](#飞书应用配置和-openai-相关步骤)
-* [六、更多交流](#更多交流)
-* [七、相关资源](#相关资源)
-* [八、商业服务](#商业服务)
+* [五、高级配置（可选）](#高级配置（可选）)
+* [六、飞书应用配置和 OpenAI 相关步骤](#飞书应用配置和-openai-相关步骤)
+* [七、更多交流](#更多交流)
+* [八、相关资源](#相关资源)
+* [九、商业服务](#商业服务)
 
 ## 预览
 ![](./docs/assets/images/chatgpt.chat.group.png)
@@ -100,6 +101,11 @@ $ docker-compose up -d
 ```bash
 # 支持 Go-Zoox 中间件
 ```
+
+## 高级配置（可选）
+* `NGROK_ENABLE`: 启用 Ngrok
+* `NGROK_AUTH_TOKEN`: 付费用户 Ngrok Auth Token（建议付费，否则每次都是随机地址，很不稳定）
+* `NGROK_SUBDOMAIN`: 指定固定子域名
 
 ## 飞书应用配置和 OpenAI 相关步骤
 
