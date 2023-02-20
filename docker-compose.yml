@@ -1,8 +1,12 @@
 services:
   app:
-    build:
-      context: .
+    # build:
+    #   context: .
+    image: whatwewant/chatgpt-for-chatbot-feishu:v1.2.15
     environment:
       CHATGPT_API_KEY: ${CHATGPT_API_KEY}
+      APP_ID: ${APP_ID}
+      APP_SECRET: ${APP_SECRET}
       NGROK_ENABLE: "true"
-    
+    volumes:
+      - ./entrypoint.sh:/entrypoint.sh

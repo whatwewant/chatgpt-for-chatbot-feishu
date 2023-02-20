@@ -5,8 +5,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/go-zoox/chalk"
 	"github.com/go-zoox/chatbot-feishu"
 	"github.com/go-zoox/core-utils/regexp"
+	"github.com/go-zoox/debug"
 
 	"github.com/go-zoox/core-utils/fmt"
 	"github.com/go-zoox/feishu"
@@ -20,7 +22,7 @@ import (
 
 type FeishuBotConfig struct {
 	Port              int64
-	Path              string
+	APIPath           string
 	ChatGPTAPIKey     string
 	AppID             string
 	AppSecret         string
@@ -28,6 +30,8 @@ type FeishuBotConfig struct {
 	VerificationToken string
 	//
 	ReportURL string
+	//
+	SiteURL string
 }
 
 func ServeFeishuBot(cfg *FeishuBotConfig) error {
@@ -48,14 +52,33 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 		return fmt.Errorf("failed to get bot info: %v", err)
 	}
 
-	fmt.PrintJSON(map[string]interface{}{
-		"cfg": cfg,
-		"bot": botInfo,
-	})
+	if debug.IsDebugMode() {
+		fmt.PrintJSON(map[string]interface{}{
+			"cfg": cfg,
+			"bot": botInfo,
+		})
+	}
+
+	logger.Infof("Feishu Bot Online ...")
+
+	logger.Infof("")
+	logger.Infof("###### Settings START #######")
+	logger.Infof("Bot Name: %s", botInfo.AppName)
+	logger.Infof("Serve at PORT: %d", cfg.Port)
+	logger.Infof("Serve at API_PATH: %s", cfg.APIPath)
+	logger.Infof("###### Settings END #######")
+
+	if cfg.SiteURL != "" {
+		logger.Infof("")
+		logger.Infof("###### Feishu Configuration START #######")
+		logger.Infof("# %s：%s", chalk.Red("飞书事件订阅请求地址"), chalk.Green(fmt.Sprintf("%s%s", cfg.SiteURL, cfg.APIPath)))
+		logger.Infof("###### Feishu Configuration END #######")
+		logger.Infof("")
+	}
 
 	feishuchatbot, err := chatbot.New(&chatbot.Config{
 		Port:      cfg.Port,
-		Path:      cfg.Path,
+		Path:      cfg.APIPath,
 		AppID:     cfg.AppID,
 		AppSecret: cfg.AppSecret,
 	}, func(contentString string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {

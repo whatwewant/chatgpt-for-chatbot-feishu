@@ -6,7 +6,7 @@ help() {
 }
 
 core() {
-  if [ "$1" = "-h" ] || [ "$1" = "--help" ] || [ -z "$1" ]; then
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     help
     exit 0
   fi
@@ -14,6 +14,7 @@ core() {
   dotenv::try_load
 
   local PORT=${PORT:-8080}
+  local API_PATH=${API_PATH:-"/"}
 
   log::info "[$(timestamp)] run chatgpt for chatbot feishu with zmicro ..."
 
@@ -34,14 +35,34 @@ core() {
     fi
 
     if [ -n "$ngrok_subdomain" ]; then
-      zmicro ngrok http --subdomain "$ngrok_subdomain" ${PORT} >>$ngrok_log
+      zmicro ngrok http --subdomain "$ngrok_subdomain" ${PORT} --log $ngrok_log >>$ngrok_log 2>&1 &
     else
-      zmicro ngrok http ${PORT} >>$ngrok_log
+      zmicro ngrok http ${PORT} --log $ngrok_log >>$ngrok_log 2>&1 &
     fi
 
     log::info "[$(timestamp)] starting ngrok ..."
-    sleep 3
-    cat $ngrok_log
+    # sleep 3
+
+    local ngrok_url=""
+    while [ -z "$ngrok_url" ]; do
+      sleep 1
+      
+      log::info "[$(timestamp)] checking whether ngrok connected ..."
+      ngrok_url=$(cat $ngrok_log | grep "url=" | awk -F '=' '{print $8}')
+      if [ -n "$ngrok_url" ]; then
+        break
+      fi
+
+      if [ "$DEBUG" = "true" ]; then
+        log::info "[$(timestamp)] show ngrok connection info start ..."
+        cat $ngrok_log
+        log::info "[$(timestamp)] show ngrok connection info end ..."
+      fi
+    done
+
+    log::info "[$(timestamp)] ngrok url: $(color::green $ngrok_url)"
+
+    export SITE_URL=$ngrok_url
   fi
 
   log::info "[$(timestamp)] starting chatgpt for chatbot feishu ..."

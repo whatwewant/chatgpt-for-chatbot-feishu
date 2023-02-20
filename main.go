@@ -56,19 +56,25 @@ func main() {
 				Usage:   "Set error report url",
 				EnvVars: []string{"REPORT_URL"},
 			},
+			&cli.StringFlag{
+				Name:    "site-url",
+				Usage:   "The Site URL",
+				EnvVars: []string{"SITE_URL"},
+			},
 		},
 	})
 
 	app.Command(func(ctx *cli.Context) (err error) {
 		return ServeFeishuBot(&FeishuBotConfig{
 			Port:              ctx.Int64("port"),
-			Path:              ctx.String("api-path"),
+			APIPath:           ctx.String("api-path"),
 			ChatGPTAPIKey:     ctx.String("chatgpt-api-key"),
 			AppID:             ctx.String("app-id"),
 			AppSecret:         ctx.String("app-secret"),
 			EncryptKey:        ctx.String("encrypt-key"),
 			VerificationToken: ctx.String("verification-token"),
 			ReportURL:         ctx.String("report-url"),
+			SiteURL:           ctx.String("site-url"),
 		})
 	})
 
