@@ -2,13 +2,16 @@ services:
   app:
     # build:
     #   context: .
-    image: whatwewant/chatgpt-for-chatbot-feishu:v1.2.15
+    platform: linux/amd64
+    image: whatwewant/chatgpt-for-chatbot-feishu:v1.2.17
+    command: sleep infinity
     environment:
       CHATGPT_API_KEY: ${CHATGPT_API_KEY}
       APP_ID: ${APP_ID}
       APP_SECRET: ${APP_SECRET}
-      # NGROK_ENABLE: "true"
-      CPOLAR_ENABLE: "true"
-      tunnel_auth_token: ${tunnel_auth_token}
+      TUNNEL_ENABLE: "true"
+      TUNNEL_TYPE: ${TUNNEL_TYPE}
+      TUNNEL_AUTH_TOKEN: ${TUNNEL_AUTH_TOKEN}
+      TUNNEL_SUBDOMAIN: ${TUNNEL_SUBDOMAIN}
     volumes:
       - ./entrypoint.sh:/entrypoint.sh
