@@ -2,3 +2,4 @@ tmp/
 gzchatgpt
 main
 chatgpt-for-chatbot-feishu
+.env
