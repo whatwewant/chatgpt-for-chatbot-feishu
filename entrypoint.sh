@@ -100,7 +100,7 @@ runtunnel() {
       sleep 1
 
       log::info "[$(timestamp)] checking whether cpolar connected ..."
-      cpolar_url=$(cat $tunnel_log | grep "established" | grep "https" | awk -F 'at ' '{print $2}')
+      cpolar_url=$(cat $tunnel_log | grep "established" | grep "https" | awk -F 'at ' '{print $2}' | awk -F '"' '{print $1}')
       if [ -n "$cpolar_url" ]; then
         break
       fi
