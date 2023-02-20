@@ -103,9 +103,10 @@ $ docker-compose up -d
 ```
 
 ## 高级配置（可选）
-* `NGROK_ENABLE`: 启用 Ngrok
-* `NGROK_AUTH_TOKEN`: 付费用户 Ngrok Auth Token（建议付费，否则每次都是随机地址，很不稳定）
-* `NGROK_SUBDOMAIN`: 指定固定子域名
+* `TUNNEL_ENABLE`: 启用 Ngrok
+* `TUNNEL_TYPE`: 指定隧道类型，可选项：ngrok | cpolar
+* `AUTH_TOKEN`: 付费用户 Auth Token
+* `SUBDOMAIN`: 指定固定子域名
 
 ## 飞书应用配置和 OpenAI 相关步骤
 

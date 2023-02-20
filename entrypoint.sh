@@ -18,55 +18,104 @@ core() {
 
   log::info "[$(timestamp)] run chatgpt for chatbot feishu with zmicro ..."
 
-  if [ "$NGROK_ENABLE" = "true" ]; then
-    local ngrok_log=$(os::tmp_file)
-    local ngrok_auth_token=${NGROK_AUTH_TOKEN}
-    local ngrok_subdomain=${NGROK_SUBDOMAIN}
+  if [ "$TUNNEL_ENABLE" = "true" ]; then
+    runtunnel
+  fi
 
-    log::info "[$(timestamp)] enable ngrok (logfile: $ngrok_log)..."
+  log::info "[$(timestamp)] starting chatgpt for chatbot feishu ..."
+  chatgpt-for-chatbot-feishu
+}
 
-    if [ -n "$ngrok_subdomain" ] && [ -z "$ngrok_auth_token" ]; then
-      log::error "[$(timestamp)] NGROK_AUTH_TOKEN is required when use NGROK_SUBDOMAIN"
+runtunnel() {
+  local tunnel_type="$TUNNEL_TYPE"
+  local tunnel_auth_token="$TUNNEL_AUTH_TOKEN"
+  local tunnel_subdomain="$TUNNEL_SUBDOMAIN"
+  local tunnel_log=$(os::tmp_file)
+
+  echo 
+
+  log::info "[$(timestamp)] enable tunnel $tunnel_type (logfile: $tunnel_log)..."
+
+  # TUNNEL NGROK
+  if [ "$tunnel_type" = "ngrok" ]; then
+    if [ -n "$tunnel_subdomain" ] && [ -z "$tunnel_auth_token" ]; then
+      log::error "[$(timestamp)] tunnel_auth_token is required when use tunnel_subdomain"
       return 1
     fi
 
-    if [ -n "$ngrok_auth_token" ]; then
-      zmicro ngrok config add-authtoken $ngrok_auth_token
+    if [ -n "$tunnel_auth_token" ]; then
+      zmicro ngrok config add-authtoken $tunnel_auth_token >>/dev/null
     fi
 
-    if [ -n "$ngrok_subdomain" ]; then
-      zmicro ngrok http --subdomain "$ngrok_subdomain" ${PORT} --log $ngrok_log >>$ngrok_log 2>&1 &
+    if [ -n "$tunnel_subdomain" ]; then
+      zmicro ngrok http --subdomain "$tunnel_subdomain" ${PORT} --log $tunnel_log >>$tunnel_log 2>&1 &
     else
-      zmicro ngrok http ${PORT} --log $ngrok_log >>$ngrok_log 2>&1 &
+      zmicro ngrok http ${PORT} --log $tunnel_log >>$tunnel_log 2>&1 &
     fi
 
     log::info "[$(timestamp)] starting ngrok ..."
     # sleep 3
 
-    local ngrok_url=""
-    while [ -z "$ngrok_url" ]; do
+    local url=""
+    while [ -z "$url" ]; do
       sleep 1
-      
+
       log::info "[$(timestamp)] checking whether ngrok connected ..."
-      ngrok_url=$(cat $ngrok_log | grep "url=" | awk -F '=' '{print $8}')
-      if [ -n "$ngrok_url" ]; then
+      url=$(cat $tunnel_log | grep "url=" | head -n 1 | awk -F '=' '{print $8}')
+      if [ -n "$url" ]; then
         break
       fi
 
       if [ "$DEBUG" = "true" ]; then
         log::info "[$(timestamp)] show ngrok connection info start ..."
-        cat $ngrok_log
+        cat $tunnel_log
         log::info "[$(timestamp)] show ngrok connection info end ..."
       fi
     done
 
-    log::info "[$(timestamp)] ngrok url: $(color::green $ngrok_url)"
+    log::info "[$(timestamp)] ngrok url: $(color::green $url)"
 
-    export SITE_URL=$ngrok_url
+    export SITE_URL=$url
+  elif [ "$TUNNEL_TYPE" = "cpolar" ]; then
+    if [ -n "$tunnel_subdomain" ] && [ -z "$tunnel_auth_token" ]; then
+      log::error "[$(timestamp)] tunnel_auth_token is required when use tunnel_subdomain"
+      return 1
+    fi
+
+    if [ -n "$tunnel_auth_token" ]; then
+      zmicro cpolar authtoken $tunnel_auth_token >>/dev/null
+    fi
+
+    if [ -n "$tunnel_subdomain" ]; then
+      zmicro cpolar http --subdomain "$tunnel_subdomain" ${PORT} --log $tunnel_log >>$tunnel_log 2>&1 &
+    else
+      zmicro cpolar http ${PORT} --log $tunnel_log >>$tunnel_log 2>&1 &
+    fi
+
+    log::info "[$(timestamp)] starting cpolar ..."
+    # sleep 3
+
+    local cpolar_url=""
+    while [ -z "$cpolar_url" ]; do
+      sleep 1
+
+      log::info "[$(timestamp)] checking whether cpolar connected ..."
+      cpolar_url=$(cat $tunnel_log | grep "established" | grep "https" | awk -F 'at ' '{print $2}' | awk -F '"' '{print $1}')
+      if [ -n "$cpolar_url" ]; then
+        break
+      fi
+
+      if [ "$DEBUG" = "true" ]; then
+        log::info "[$(timestamp)] show cpolar connection info start ..."
+        cat $tunnel_log
+        log::info "[$(timestamp)] show cpolar connection info end ..."
+      fi
+    done
+
+    log::info "[$(timestamp)] cpolar url: $(color::green $cpolar_url)"
+
+    export SITE_URL=$cpolar_url
   fi
-
-  log::info "[$(timestamp)] starting chatgpt for chatbot feishu ..."
-  chatgpt-for-chatbot-feishu
 }
 
 run() {
