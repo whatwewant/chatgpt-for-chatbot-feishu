@@ -7,6 +7,8 @@ services:
       CHATGPT_API_KEY: ${CHATGPT_API_KEY}
       APP_ID: ${APP_ID}
       APP_SECRET: ${APP_SECRET}
-      NGROK_ENABLE: "true"
+      # NGROK_ENABLE: "true"
+      CPOLAR_ENABLE: "true"
+      CPOLAR_AUTH_TOKEN: ${CPOLAR_AUTH_TOKEN}
     volumes:
       - ./entrypoint.sh:/entrypoint.sh
