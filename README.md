@@ -55,6 +55,11 @@
 # 执行下面脚本，并按提示操作，填写飞书 APP ID/Secret 和 OpenAI/ChatGPT API Key
 # 更多用法，注意看提示
 $ curl -o- https://raw.githubusercontent.com/zmicro-design/service-chatgpt-for-chatbot-feishu/master/install | bash
+
+# @BUG 如果系统问题报错:  stty: 'standard input': Inappropriate ioctl for device
+# 解决方案：使用下面两条命令执行
+curl -o- https://raw.githubusercontent.com/zmicro-design/service-chatgpt-for-chatbot-feishu/master/install > /tmp/install.sh
+bash /tmp/install.sh
 ```
 
 ### 二进制
