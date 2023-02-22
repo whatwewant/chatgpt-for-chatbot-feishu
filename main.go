@@ -62,11 +62,6 @@ func main() {
 				EnvVars: []string{"SITE_URL"},
 			},
 			&cli.StringFlag{
-				Name:    "site-url",
-				Usage:   "The Site URL",
-				EnvVars: []string{"SITE_URL"},
-			},
-			&cli.StringFlag{
 				Name:    "openai-model",
 				Usage:   "Custom open ai model",
 				EnvVars: []string{"OPENAI_MODEL"},
