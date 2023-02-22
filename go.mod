@@ -3,10 +3,12 @@ module github.com/go-zoox/chatgpt-for-chatbot-feishu
 go 1.20
 
 require (
+	github.com/go-zoox/chalk v1.0.2
 	github.com/go-zoox/chatbot-feishu v1.0.7
-	github.com/go-zoox/chatgpt-client v1.0.10
+	github.com/go-zoox/chatgpt-client v1.2.0
 	github.com/go-zoox/cli v1.0.10
 	github.com/go-zoox/core-utils v1.2.6
+	github.com/go-zoox/debug v1.0.1
 	github.com/go-zoox/feishu v1.3.4
 	github.com/go-zoox/logger v1.4.0
 	github.com/go-zoox/retry v1.0.3
@@ -19,14 +21,12 @@ require (
 	github.com/fatih/color v1.14.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
-	github.com/go-zoox/chalk v1.0.2 // indirect
 	github.com/go-zoox/compress v1.0.1 // indirect
 	github.com/go-zoox/cookie v1.0.2 // indirect
 	github.com/go-zoox/counter v1.2.0 // indirect
 	github.com/go-zoox/cron v1.1.2 // indirect
 	github.com/go-zoox/crypto v1.1.8 // indirect
 	github.com/go-zoox/datetime v1.1.1 // indirect
-	github.com/go-zoox/debug v1.0.1 // indirect
 	github.com/go-zoox/encoding v1.2.1 // indirect
 	github.com/go-zoox/errors v1.0.2 // indirect
 	github.com/go-zoox/fetch v1.7.4 // indirect
