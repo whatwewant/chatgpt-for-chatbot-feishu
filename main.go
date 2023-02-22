@@ -61,6 +61,16 @@ func main() {
 				Usage:   "The Site URL",
 				EnvVars: []string{"SITE_URL"},
 			},
+			&cli.StringFlag{
+				Name:    "site-url",
+				Usage:   "The Site URL",
+				EnvVars: []string{"SITE_URL"},
+			},
+			&cli.StringFlag{
+				Name:    "openai-model",
+				Usage:   "Custom open ai model",
+				EnvVars: []string{"OPENAI_MODEL"},
+			},
 		},
 	})
 
@@ -75,6 +85,7 @@ func main() {
 			VerificationToken: ctx.String("verification-token"),
 			ReportURL:         ctx.String("report-url"),
 			SiteURL:           ctx.String("site-url"),
+			OpenAIModel:       ctx.String("openai-model"),
 		})
 	})
 

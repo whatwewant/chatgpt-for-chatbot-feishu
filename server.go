@@ -32,6 +32,8 @@ type FeishuBotConfig struct {
 	ReportURL string
 	//
 	SiteURL string
+	//
+	OpenAIModel string
 }
 
 func ServeFeishuBot(cfg *FeishuBotConfig) error {
@@ -132,6 +134,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 				err = retry.Retry(func() error {
 					conversation, err := client.GetOrCreateConversation(request.ChatID(), &chatgpt.ConversationConfig{
 						MaxMessages: 50,
+						Model:       cfg.OpenAIModel,
 					})
 					if err != nil {
 						return fmt.Errorf("failed to get or create conversation by ChatID %s", request.ChatID())
