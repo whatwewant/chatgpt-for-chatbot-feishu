@@ -37,12 +37,17 @@ type FeishuBotConfig struct {
 	OpenAIModel string
 	//
 	FeishuBaseURI string
+	//
+	ChatGPTContextMessage string
+	ChatGPTLanguage       string
 }
 
 func ServeFeishuBot(cfg *FeishuBotConfig) error {
 
 	client, err := chatgpt.New(&chatgpt.Config{
-		APIKey: cfg.ChatGPTAPIKey,
+		APIKey:               cfg.ChatGPTAPIKey,
+		ConversationContext:  cfg.ChatGPTContextMessage,
+		ConversationLanguage: cfg.ChatGPTLanguage,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to create chatgpt client: %v", err)

@@ -71,22 +71,34 @@ func main() {
 				Usage:   "Custom feishu base uri for selfhosted Feishu",
 				EnvVars: []string{"FEISHU_BASE_URI"},
 			},
+			&cli.StringFlag{
+				Name:    "chatgpt-context-message",
+				Usage:   "Custom chatgpt context message",
+				EnvVars: []string{"CHATGPT_CONTEXT_MESSAGE"},
+			},
+			&cli.StringFlag{
+				Name:    "chatgpt-language",
+				Usage:   "Custom chatgpt lanuage",
+				EnvVars: []string{"CHATGPT_LANGUAGE"},
+			},
 		},
 	})
 
 	app.Command(func(ctx *cli.Context) (err error) {
 		return ServeFeishuBot(&FeishuBotConfig{
-			Port:              ctx.Int64("port"),
-			APIPath:           ctx.String("api-path"),
-			ChatGPTAPIKey:     ctx.String("chatgpt-api-key"),
-			AppID:             ctx.String("app-id"),
-			AppSecret:         ctx.String("app-secret"),
-			EncryptKey:        ctx.String("encrypt-key"),
-			VerificationToken: ctx.String("verification-token"),
-			ReportURL:         ctx.String("report-url"),
-			SiteURL:           ctx.String("site-url"),
-			OpenAIModel:       ctx.String("openai-model"),
-			FeishuBaseURI:     ctx.String("feishu-base-uri"),
+			Port:                  ctx.Int64("port"),
+			APIPath:               ctx.String("api-path"),
+			ChatGPTAPIKey:         ctx.String("chatgpt-api-key"),
+			AppID:                 ctx.String("app-id"),
+			AppSecret:             ctx.String("app-secret"),
+			EncryptKey:            ctx.String("encrypt-key"),
+			VerificationToken:     ctx.String("verification-token"),
+			ReportURL:             ctx.String("report-url"),
+			SiteURL:               ctx.String("site-url"),
+			OpenAIModel:           ctx.String("openai-model"),
+			FeishuBaseURI:         ctx.String("feishu-base-uri"),
+			ChatGPTContextMessage: ctx.String("chatgpt-context-message"),
+			ChatGPTLanguage:       ctx.String("chatgpt-language"),
 		})
 	})
 
