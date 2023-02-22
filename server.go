@@ -38,15 +38,15 @@ type FeishuBotConfig struct {
 	//
 	FeishuBaseURI string
 	//
-	ChatGPTContextMessage string
-	ChatGPTLanguage       string
+	ChatGPTContext  string
+	ChatGPTLanguage string
 }
 
 func ServeFeishuBot(cfg *FeishuBotConfig) error {
 
 	client, err := chatgpt.New(&chatgpt.Config{
 		APIKey:               cfg.ChatGPTAPIKey,
-		ConversationContext:  cfg.ChatGPTContextMessage,
+		ConversationContext:  cfg.ChatGPTContext,
 		ConversationLanguage: cfg.ChatGPTLanguage,
 	})
 	if err != nil {
