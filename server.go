@@ -15,6 +15,7 @@ import (
 	mc "github.com/go-zoox/feishu/message/content"
 
 	chatgpt "github.com/go-zoox/chatgpt-client"
+	feishuBot "github.com/go-zoox/feishu/bot"
 	feishuEvent "github.com/go-zoox/feishu/event"
 	"github.com/go-zoox/logger"
 	"github.com/go-zoox/retry"
@@ -52,23 +53,39 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 		AppSecret: cfg.AppSecret,
 		BaseURI:   cfg.FeishuBaseURI,
 	})
-	botInfo, err := bot.Bot().GetBotInfo()
-	if err != nil {
-		return fmt.Errorf("failed to get bot info: %v", err)
+	var botInfo *feishuBot.GetBotInfoResponse
+
+	tryToGetBotInfo := func() {
+		for {
+			if botInfo != nil {
+				break
+			}
+
+			logger.Infof("trying to get bot info ...")
+			botInfo, err = bot.Bot().GetBotInfo()
+			if err != nil {
+				logger.Errorf("failed to get bot info: %v", err)
+				return
+			}
+
+			logger.Infof("Bot Name: %s", botInfo.AppName)
+			logger.Infof("Feishu Bot Online ...")
+			time.Sleep(3 * time.Second)
+		}
 	}
+
+	go func() {
+		tryToGetBotInfo()
+	}()
 
 	if debug.IsDebugMode() {
 		fmt.PrintJSON(map[string]interface{}{
 			"cfg": cfg,
-			"bot": botInfo,
 		})
 	}
 
-	logger.Infof("Feishu Bot Online ...")
-
 	logger.Infof("")
 	logger.Infof("###### Settings START #######")
-	logger.Infof("Bot Name: %s", botInfo.AppName)
 	logger.Infof("Serve at PORT: %d", cfg.Port)
 	logger.Infof("Serve at API_PATH: %s", cfg.APIPath)
 	logger.Infof("###### Settings END #######")
@@ -88,6 +105,13 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 		AppSecret: cfg.AppSecret,
 	}, func(contentString string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
 		// fmt.PrintJSON(request)
+		if botInfo == nil {
+			logger.Infof("trying to get bot info ...")
+			botInfo, err = bot.Bot().GetBotInfo()
+			if err != nil {
+				return fmt.Errorf("failed to get bot info: %v", err)
+			}
+		}
 
 		// empty message
 		if strings.TrimSpace(contentString) == "" {
