@@ -44,6 +44,8 @@ github.com/go-zoox/chatgpt-client v1.2.2 h1:0TZ9R+6xaMzD3Dugzz1FXeZ2GfbrIoyMbM4R
 github.com/go-zoox/chatgpt-client v1.2.2/go.mod h1:aEPU6QmL7e9J+j4Mu5QvfUTq3gb9lhAWWes1oFBu2A0=
 github.com/go-zoox/cli v1.0.10 h1:guifbeAJHjhW6m5P+CXQ3ubVO0dqIEq/jhArNUC0930=
 github.com/go-zoox/cli v1.0.10/go.mod h1:e26mNwc/G1eM6TjoBs2/0PRZTj7NZtoO0WZDXtg82iY=
+github.com/go-zoox/cli v1.2.0 h1:qBDHwcv2o5xgqGpYokxSszs8MVdNzaNZJJroAhpevFM=
+github.com/go-zoox/cli v1.2.0/go.mod h1:p2VJxwXFJRp3+nt29/LihKTNzwAFRkIhnFpf3hyVrmE=
 github.com/go-zoox/compress v1.0.1 h1:EyNxo5NscMLua5fvUdiGSF+BwhuTfMeyppu7OwKAW7Q=
 github.com/go-zoox/compress v1.0.1/go.mod h1:iV6CcNulf3OuEfA1h1VOsaBqYH81cVSg5wNi5HDx2h4=
 github.com/go-zoox/cookie v1.0.2 h1:fEccN4WHF9LheJlwArleALlPgOC40ME7BRNh7nklM5M=
@@ -69,6 +71,7 @@ github.com/go-zoox/debug v1.0.1/go.mod h1:7HvnBeV1dVuuGVnXSLdJ5OE6X/wIXAjIEyiaA7
 github.com/go-zoox/dotenv v1.0.7/go.mod h1:N2bXxghq3Zk+lpiOxv+m+0yjnGubVqJGJDR/9jWm3N0=
 github.com/go-zoox/dotenv v1.1.0/go.mod h1:elKALomz436YKX4Syo+f02ozIQYq2yFaprj6jL6GnCQ=
 github.com/go-zoox/dotenv v1.2.3 h1:9wx4sL2u/FrRLkzoOb7ozYii6NoGsl05KoGdZm1ebIE=
+github.com/go-zoox/dotenv v1.2.3/go.mod h1:hhl5WZUxI+DNJN6Zos1y7Nq0jDCXciphswPSYtInqg0=
 github.com/go-zoox/encoding v1.0.5/go.mod h1:WFF+m/IWYHtClMrcKnrdZHHf3cdIF8de2uTOILPM7lw=
 github.com/go-zoox/encoding v1.0.7/go.mod h1:h6ZgI27IaUSBq1ntaZjnSruPdRFuBLNUmfp57TaPxs4=
 github.com/go-zoox/encoding v1.2.1 h1:38rQRsfL1f1YHZaqsPaGcNMkPnzatnPlYiHioUh9F4A=
@@ -159,6 +162,7 @@ github.com/hpcloud/tail v1.0.0/go.mod h1:ab1qPbhIpdTxEkNHXyeSf5vhxWSCs/tWer42PpO
 github.com/ianlancetaylor/demangle v0.0.0-20200824232613-28f6c0f3b639/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/joho/godotenv v1.4.0/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
 github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
+github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
 github.com/kr/pretty v0.2.1/go.mod h1:ipq/a2n7PKx3OHsz4KJII5eveXtPO4qwEXGdVfWzfnI=
 github.com/kr/pretty v0.3.0 h1:WgNl7dwNpEZ6jJ9k1snq4pZsg7DOEN8hP9Xw0Tsjwk0=
