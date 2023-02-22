@@ -62,14 +62,14 @@ func main() {
 				EnvVars: []string{"SITE_URL"},
 			},
 			&cli.StringFlag{
-				Name:    "site-url",
-				Usage:   "The Site URL",
-				EnvVars: []string{"SITE_URL"},
-			},
-			&cli.StringFlag{
 				Name:    "openai-model",
 				Usage:   "Custom open ai model",
 				EnvVars: []string{"OPENAI_MODEL"},
+			},
+			&cli.StringFlag{
+				Name:    "feishu-base-uri",
+				Usage:   "Custom feishu base uri for selfhosted Feishu",
+				EnvVars: []string{"FEISHU_BASE_URI"},
 			},
 		},
 	})
@@ -86,6 +86,7 @@ func main() {
 			ReportURL:         ctx.String("report-url"),
 			SiteURL:           ctx.String("site-url"),
 			OpenAIModel:       ctx.String("openai-model"),
+			FeishuBaseURI:     ctx.String("feishu-base-uri"),
 		})
 	})
 

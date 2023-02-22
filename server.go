@@ -34,6 +34,8 @@ type FeishuBotConfig struct {
 	SiteURL string
 	//
 	OpenAIModel string
+	//
+	FeishuBaseURI string
 }
 
 func ServeFeishuBot(cfg *FeishuBotConfig) error {
@@ -48,6 +50,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 	bot := feishu.New(&feishu.Config{
 		AppID:     cfg.AppID,
 		AppSecret: cfg.AppSecret,
+		BaseURI:   cfg.FeishuBaseURI,
 	})
 	botInfo, err := bot.Bot().GetBotInfo()
 	if err != nil {
