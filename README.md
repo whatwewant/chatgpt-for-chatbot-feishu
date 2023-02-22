@@ -183,4 +183,10 @@ $ docker-compose up -d
 
 ### 更新日志
 
-2023.02.20 内置支持 tunnel，目前支持 cpolar，ngrok，一键部署版本支持通过 `zmicro service upgrade chatgpt-for-chatbot-feishu` 快速升级，按提示操作即可，使用更加简单
+* 2023.02.22 修复从零开始创建机器人的时候需要飞书 Challenge 但是启动服务需要开通机器人，从而造成死循环，无法启动服务
+
+* 2023.02.22 支持私有部署的飞书
+
+* 2023.02.22 支持自定义 OpenAI 模型
+
+* 2023.02.20 内置支持 tunnel，目前支持 cpolar，ngrok，一键部署版本支持通过 `zmicro service upgrade chatgpt-for-chatbot-feishu` 快速升级，按提示操作即可，使用更加简单
