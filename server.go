@@ -54,24 +54,35 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 		BaseURI:   cfg.FeishuBaseURI,
 	})
 	var botInfo *feishuBot.GetBotInfoResponse
-	go func() {
-		botInfo, err = bot.Bot().GetBotInfo()
-		if err != nil {
-			logger.Errorf("failed to get bot info: %v", err)
-			return
-		}
 
-		logger.Infof("Bot Name: %s", botInfo.AppName)
+	tryToGetBotInfo := func() {
+		for {
+			if botInfo != nil {
+				break
+			}
+
+			logger.Infof("trying to get bot info ...")
+			botInfo, err = bot.Bot().GetBotInfo()
+			if err != nil {
+				logger.Errorf("failed to get bot info: %v", err)
+				return
+			}
+
+			logger.Infof("Bot Name: %s", botInfo.AppName)
+			logger.Infof("Feishu Bot Online ...")
+			time.Sleep(3 * time.Second)
+		}
+	}
+
+	go func() {
+		tryToGetBotInfo()
 	}()
 
 	if debug.IsDebugMode() {
 		fmt.PrintJSON(map[string]interface{}{
 			"cfg": cfg,
-			// "bot": botInfo,
 		})
 	}
-
-	logger.Infof("Feishu Bot Online ...")
 
 	logger.Infof("")
 	logger.Infof("###### Settings START #######")
@@ -94,6 +105,13 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 		AppSecret: cfg.AppSecret,
 	}, func(contentString string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
 		// fmt.PrintJSON(request)
+		if botInfo == nil {
+			logger.Infof("trying to get bot info ...")
+			botInfo, err = bot.Bot().GetBotInfo()
+			if err != nil {
+				return fmt.Errorf("failed to get bot info: %v", err)
+			}
+		}
 
 		// empty message
 		if strings.TrimSpace(contentString) == "" {
