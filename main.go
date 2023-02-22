@@ -71,6 +71,16 @@ func main() {
 				Usage:   "Custom feishu base uri for selfhosted Feishu",
 				EnvVars: []string{"FEISHU_BASE_URI"},
 			},
+			&cli.StringFlag{
+				Name:    "conversation-context",
+				Usage:   "Custom chatgpt conversation context",
+				EnvVars: []string{"CHATGPT_CONTEXT_MESSAGE"},
+			},
+			&cli.StringFlag{
+				Name:    "conversation-language",
+				Usage:   "Custom chatgpt conversation lanuage",
+				EnvVars: []string{"CHATGPT_LANGUAGE"},
+			},
 		},
 	})
 
@@ -87,6 +97,8 @@ func main() {
 			SiteURL:           ctx.String("site-url"),
 			OpenAIModel:       ctx.String("openai-model"),
 			FeishuBaseURI:     ctx.String("feishu-base-uri"),
+			ChatGPTContext:    ctx.String("chatgpt-context"),
+			ChatGPTLanguage:   ctx.String("chatgpt-language"),
 		})
 	})
 
