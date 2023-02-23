@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"strings"
 	"time"
 
@@ -45,6 +44,11 @@ type FeishuBotConfig struct {
 }
 
 func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
+	logger.Infof("###### Settings START #######")
+	logger.Infof("Serve at PORT: %d", cfg.Port)
+	logger.Infof("Serve at API_PATH: %s", cfg.APIPath)
+	logger.Infof("###### Settings END #######")
+
 	logs := &Logs{
 		Dir: cfg.LogsDir,
 	}
@@ -74,7 +78,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 				break
 			}
 
-			logger.Infof("trying to get bot info ...")
+			logger.Infof("Trying to get bot info ...")
 			botInfo, err = bot.Bot().GetBotInfo()
 			if err != nil {
 				logger.Errorf("failed to get bot info: %v", err)
@@ -97,12 +101,6 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		})
 	}
 
-	logger.Infof("")
-	logger.Infof("###### Settings START #######")
-	logger.Infof("Serve at PORT: %d", cfg.Port)
-	logger.Infof("Serve at API_PATH: %s", cfg.APIPath)
-	logger.Infof("###### Settings END #######")
-
 	if cfg.SiteURL != "" {
 		logger.Infof("")
 		logger.Infof("###### Feishu Configuration START #######")
@@ -116,10 +114,44 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		Path:      cfg.APIPath,
 		AppID:     cfg.AppID,
 		AppSecret: cfg.AppSecret,
-	}, func(contentString string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
+	})
+	if err != nil {
+		return fmt.Errorf("failed to create feishu chatbot: %v", err)
+	}
+
+	feishuchatbot.OnCommand("ping", &chatbot.Command{
+		Handler: func(args []string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
+			msgType, content, err := mc.
+				NewContent().
+				Post(&mc.ContentTypePost{
+					ZhCN: &mc.ContentTypePostBody{
+						Content: [][]mc.ContentTypePostBodyItem{
+							{
+								{
+									Tag:      "text",
+									UnEscape: true,
+									Text:     "pong",
+								},
+							},
+						},
+					},
+				}).
+				Build()
+			if err != nil {
+				return fmt.Errorf("failed to build content: %v", err)
+			}
+			if err := reply(string(content), msgType); err != nil {
+				return fmt.Errorf("failed to reply: %v", err)
+			}
+
+			return nil
+		},
+	})
+
+	feishuchatbot.OnMessage(func(text string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
 		// fmt.PrintJSON(request)
 		if botInfo == nil {
-			logger.Infof("trying to get bot info ...")
+			logger.Infof("Trying to get bot info ...")
 			botInfo, err = bot.Bot().GetBotInfo()
 			if err != nil {
 				return fmt.Errorf("failed to get bot info: %v", err)
@@ -128,20 +160,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 
 		user := request.Sender().SenderID.UserID
 
-		// empty message
-		if strings.TrimSpace(contentString) == "" {
-			return nil
-		}
-
-		type Content struct {
-			Text string `json:"text"`
-		}
-		var content Content
-		if err := json.Unmarshal([]byte(contentString), &content); err != nil {
-			return err
-		}
-
-		textMessage := strings.TrimSpace(content.Text)
+		textMessage := strings.TrimSpace(text)
 		if textMessage == "" {
 			return nil
 		}
@@ -253,9 +272,6 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 
 		return nil
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create feishu chatbot: %v", err)
-	}
 
-	return feishuchatbot.Serve()
+	return feishuchatbot.Run()
 }
