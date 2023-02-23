@@ -110,10 +110,12 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 	}
 
 	feishuchatbot, err := chatbot.New(&chatbot.Config{
-		Port:      cfg.Port,
-		Path:      cfg.APIPath,
-		AppID:     cfg.AppID,
-		AppSecret: cfg.AppSecret,
+		Port:              cfg.Port,
+		Path:              cfg.APIPath,
+		AppID:             cfg.AppID,
+		AppSecret:         cfg.AppSecret,
+		VerificationToken: cfg.VerificationToken,
+		EncryptKey:        cfg.EncryptKey,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to create feishu chatbot: %v", err)
