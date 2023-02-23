@@ -172,7 +172,8 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 			if ok := regexp.Match("^@_user_1", textMessage); ok {
 				for _, metion := range request.Event.Message.Mentions {
 					if metion.Key == "@_user_1" && metion.ID.OpenID == botInfo.OpenID {
-						question = textMessage[len("@_user_1 "):]
+						question = textMessage[len("@_user_1"):]
+						question = strings.TrimSpace(question)
 						break
 					}
 				}
@@ -185,78 +186,49 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		}
 
 		question = strings.TrimSpace(question)
+		if question == "" {
+			logger.Infof("ignore empty question message")
+			return nil
+		}
 
-		if question != "" {
-			go func() {
-				logger.Infof("%s 问：%s", user, question)
-				var err error
+		go func() {
+			logger.Infof("%s 问：%s", user, question)
+			var err error
 
-				conversation, err := client.GetOrCreateConversation(request.ChatID(), &chatgpt.ConversationConfig{
-					MaxMessages: 50,
-					Model:       cfg.OpenAIModel,
+			conversation, err := client.GetOrCreateConversation(request.ChatID(), &chatgpt.ConversationConfig{
+				MaxMessages: 50,
+				Model:       cfg.OpenAIModel,
+			})
+			if err != nil {
+				logger.Errorf("failed to get or create conversation by ChatID %s", request.ChatID())
+				return
+			}
+
+			if err := conversation.IsQuestionAsked(request.Event.Message.MessageID); err != nil {
+				logger.Warnf("duplicated event(id: %s): %v", request.Event.Message.MessageID, err)
+				return
+			}
+
+			var answer []byte
+			err = retry.Retry(func() error {
+
+				answer, err = conversation.Ask([]byte(question), &chatgpt.ConversationAskConfig{
+					ID:   request.Event.Message.MessageID,
+					User: user,
 				})
 				if err != nil {
-					logger.Errorf("failed to get or create conversation by ChatID %s", request.ChatID())
-					return
+					logger.Errorf("failed to request answer: %v", err)
+					return fmt.Errorf("failed to request answer: %v", err)
 				}
 
-				if err := conversation.IsQuestionAsked(request.Header.EventID); err != nil {
-					logger.Warnf("duplicated event(id: %s): %v", request.Header.EventID, err)
-					return
-				}
-
-				var answer []byte
-				err = retry.Retry(func() error {
-
-					answer, err = conversation.Ask([]byte(question), &chatgpt.ConversationAskConfig{
-						ID:   request.Header.EventID,
-						User: user,
-					})
-					if err != nil {
-						logger.Errorf("failed to request answer: %v", err)
-						return fmt.Errorf("failed to request answer: %v", err)
-					}
-
-					return nil
-				}, 5, 3*time.Second)
-				if err != nil {
-					logger.Errorf("failed to get answer: %v", err)
-					msgType, content, err := mc.
-						NewContent().
-						Text(&mc.ContentTypeText{
-							Text: "ChatGPT 繁忙，请稍后重试",
-						}).
-						Build()
-					if err != nil {
-						logger.Errorf("failed to build content: %v", err)
-						return
-					}
-					if err := reply(string(content), msgType); err != nil {
-						return
-					}
-					return
-				}
-
-				logger.Infof("ChatGPT 答：%s", answer)
-				responseMessage := string(answer)
-				if request.IsGroupChat() {
-					responseMessage = fmt.Sprintf("%s\n-------------\n%s", question, answer)
-				}
-
+				return nil
+			}, 5, 3*time.Second)
+			if err != nil {
+				logger.Errorf("failed to get answer: %v", err)
 				msgType, content, err := mc.
 					NewContent().
-					Post(&mc.ContentTypePost{
-						ZhCN: &mc.ContentTypePostBody{
-							Content: [][]mc.ContentTypePostBodyItem{
-								{
-									{
-										Tag:      "text",
-										UnEscape: true,
-										Text:     responseMessage,
-									},
-								},
-							},
-						},
+					Text(&mc.ContentTypeText{
+						Text: "ChatGPT 繁忙，请稍后重试",
 					}).
 					Build()
 				if err != nil {
@@ -264,11 +236,42 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 					return
 				}
 				if err := reply(string(content), msgType); err != nil {
-					logger.Errorf("failed to reply: %v", err)
 					return
 				}
-			}()
-		}
+				return
+			}
+
+			logger.Infof("ChatGPT 答：%s", answer)
+			responseMessage := string(answer)
+			if request.IsGroupChat() {
+				responseMessage = fmt.Sprintf("%s\n-------------\n%s", question, answer)
+			}
+
+			msgType, content, err := mc.
+				NewContent().
+				Post(&mc.ContentTypePost{
+					ZhCN: &mc.ContentTypePostBody{
+						Content: [][]mc.ContentTypePostBodyItem{
+							{
+								{
+									Tag:      "text",
+									UnEscape: true,
+									Text:     responseMessage,
+								},
+							},
+						},
+					},
+				}).
+				Build()
+			if err != nil {
+				logger.Errorf("failed to build content: %v", err)
+				return
+			}
+			if err := reply(string(content), msgType); err != nil {
+				logger.Errorf("failed to reply: %v", err)
+				return
+			}
+		}()
 
 		return nil
 	})
