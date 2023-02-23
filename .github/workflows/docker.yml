@@ -42,7 +42,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    container: whatwewant/zmicro:v1
+    # container: whatwewant/zmicro:v1
 
     steps:
       - name: Get Current Date
