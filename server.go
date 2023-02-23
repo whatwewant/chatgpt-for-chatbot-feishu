@@ -172,17 +172,25 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 				logger.Infof("%s 问：%s", user, question)
 				var err error
 
+				conversation, err := client.GetOrCreateConversation(request.ChatID(), &chatgpt.ConversationConfig{
+					MaxMessages: 50,
+					Model:       cfg.OpenAIModel,
+				})
+				if err != nil {
+					logger.Errorf("failed to get or create conversation by ChatID %s", request.ChatID())
+					return
+				}
+
+				if err := conversation.IsQuestionAsked(request.Header.EventID); err != nil {
+					logger.Warnf("duplicated event(id: %s): %v", request.Header.EventID, err)
+					return
+				}
+
 				var answer []byte
 				err = retry.Retry(func() error {
-					conversation, err := client.GetOrCreateConversation(request.ChatID(), &chatgpt.ConversationConfig{
-						MaxMessages: 50,
-						Model:       cfg.OpenAIModel,
-					})
-					if err != nil {
-						return fmt.Errorf("failed to get or create conversation by ChatID %s", request.ChatID())
-					}
 
 					answer, err = conversation.Ask([]byte(question), &chatgpt.ConversationAskConfig{
+						ID:   request.Header.EventID,
 						User: user,
 					})
 					if err != nil {
