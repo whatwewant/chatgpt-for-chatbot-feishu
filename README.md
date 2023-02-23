@@ -104,11 +104,20 @@ $ docker-compose up -d
 # 支持 Go-Zoox 中间件
 ```
 
-## 高级配置（可选）
+## 高级环境配置（可选）
+* `API_PATH`: 自定义 WebHook 路径
+* `ENCRYPT_KEY`: 飞书事件密钥
+* `VERIFICATION_TOKEN`: 飞书 Challenge 校验 Token
+* `SITE_URL`: 自定义域名地址
+* `OPENAI_MODEL`: 自定义 OpenAI 模型
+* `FEISHU_BASE_URI`: 私有部署飞书地址
+* `CHATGPT_CONTEXT_MESSAGE`: 自定义上下文消息
+* `CHATGPT_LANGUAGE`: 自定义机器人初始语言
 * `TUNNEL_ENABLE`: 启用 Ngrok
 * `TUNNEL_TYPE`: 指定隧道类型，可选项：ngrok | cpolar
 * `AUTH_TOKEN`: 付费用户 Auth Token
 * `SUBDOMAIN`: 指定固定子域名
+* `LOGS_DIR`: 自定义日志目录
 
 ## 飞书应用配置和 OpenAI 相关步骤
 
