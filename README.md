@@ -183,10 +183,24 @@ $ docker-compose up -d
 
 ### 更新日志
 
+* 2023.02.23 修复 CI Docker Image Tag latest
+
+* 2023.02.23 事件支持 encrypt key (#31)
+
+* 2023.02.23 Challenge 支持 verification token (#31)
+
+* 2023.02.24 支持命令模式，为角色扮演命令做好准备 (#29)
+
+* 2023.02.23 修复飞书由于网络原因会重发消息，应该可以从 chatbot 端忽略已经重复的消息 (#28)
+
+* 2023.02.23 支持自定义上下文，使用 env CHATGPT_CONTEXT_MESSAGE (#22)
+
+* 2023.02.23 支持自定义初始语言，如果不指定，默认是英文，使用 env CHATGPT_LANGUAGE (#22)
+
 * 2023.02.22 修复从零开始创建机器人的时候需要飞书 Challenge 但是启动服务需要开通机器人，从而造成死循环，无法启动服务
 
-* 2023.02.22 支持私有部署的飞书
+* 2023.02.22 支持私有部署的飞书 (#17)
 
-* 2023.02.22 支持自定义 OpenAI 模型
+* 2023.02.22 支持自定义 OpenAI 模型 (#16)
 
 * 2023.02.20 内置支持 tunnel，目前支持 cpolar，ngrok，一键部署版本支持通过 `zmicro service upgrade chatgpt-for-chatbot-feishu` 快速升级，按提示操作即可，使用更加简单
