@@ -81,11 +81,18 @@ func main() {
 				Usage:   "Custom chatgpt conversation lanuage",
 				EnvVars: []string{"CHATGPT_LANGUAGE"},
 			},
+			&cli.StringFlag{
+				Name:    "logs-dir",
+				Usage:   "The logs dir for save logs",
+				EnvVars: []string{"LOGS_DIR"},
+				Value:   "/tmp/chatgpt-for-chatbot-feishu",
+			},
 		},
 	})
 
 	app.Command(func(ctx *cli.Context) (err error) {
 		return ServeFeishuBot(&FeishuBotConfig{
+			LogsDir:           ctx.String("logs-dir"),
 			Port:              ctx.Int64("port"),
 			APIPath:           ctx.String("api-path"),
 			ChatGPTAPIKey:     ctx.String("chatgpt-api-key"),

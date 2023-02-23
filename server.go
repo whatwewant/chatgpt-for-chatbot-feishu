@@ -40,9 +40,17 @@ type FeishuBotConfig struct {
 	//
 	ChatGPTContext  string
 	ChatGPTLanguage string
+	//
+	LogsDir string
 }
 
-func ServeFeishuBot(cfg *FeishuBotConfig) error {
+func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
+	logs := &Logs{
+		Dir: cfg.LogsDir,
+	}
+	if err := logs.Setup(); err != nil {
+		return fmt.Errorf("failed to setup logs: %v", err)
+	}
 
 	client, err := chatgpt.New(&chatgpt.Config{
 		APIKey:               cfg.ChatGPTAPIKey,
