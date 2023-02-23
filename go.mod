@@ -10,7 +10,8 @@ require (
 	github.com/go-zoox/core-utils v1.2.7
 	github.com/go-zoox/debug v1.0.1
 	github.com/go-zoox/feishu v1.3.4
-	github.com/go-zoox/logger v1.4.0
+	github.com/go-zoox/fs v1.3.8
+	github.com/go-zoox/logger v1.4.4
 	github.com/go-zoox/retry v1.0.3
 )
 
@@ -31,7 +32,6 @@ require (
 	github.com/go-zoox/encoding v1.2.1 // indirect
 	github.com/go-zoox/errors v1.0.2 // indirect
 	github.com/go-zoox/fetch v1.7.4 // indirect
-	github.com/go-zoox/fs v1.3.7 // indirect
 	github.com/go-zoox/gzip v1.0.0 // indirect
 	github.com/go-zoox/headers v1.0.5 // indirect
 	github.com/go-zoox/jobqueue v1.0.0 // indirect
@@ -73,3 +73,5 @@ require (
 // replace github.com/go-zoox/chatbot-feishu => ../chatbot-feishu
 
 // replace github.com/go-zoox/feishu => ../feishu
+
+// replace github.com/go-zoox/logger => ../logger
