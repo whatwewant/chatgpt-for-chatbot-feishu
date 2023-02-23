@@ -118,6 +118,8 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 			}
 		}
 
+		user := request.Sender().SenderID.UserID
+
 		// empty message
 		if strings.TrimSpace(contentString) == "" {
 			return nil
@@ -159,7 +161,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 
 		if question != "" {
 			go func() {
-				logger.Infof("问：%s", question)
+				logger.Infof("%s 问：%s", user, question)
 				var err error
 
 				var answer []byte
@@ -173,7 +175,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 					}
 
 					answer, err = conversation.Ask([]byte(question), &chatgpt.ConversationAskConfig{
-						User: request.Sender().SenderID.UserID,
+						User: user,
 					})
 					if err != nil {
 						logger.Errorf("failed to request answer: %v", err)
@@ -200,7 +202,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) error {
 					return
 				}
 
-				logger.Infof("答：%s", answer)
+				logger.Infof("ChatGPT 答：%s", answer)
 				responseMessage := string(answer)
 				if request.IsGroupChat() {
 					responseMessage = fmt.Sprintf("%s\n-------------\n%s", question, answer)
