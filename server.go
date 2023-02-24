@@ -42,12 +42,12 @@ type FeishuBotConfig struct {
 	//
 	LogsDir string
 	//
-	OfflineText string
+	OfflineMessage string
 }
 
 func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
-	if cfg.OfflineText != "" {
-		cfg.OfflineText = "robot is offline"
+	if cfg.OfflineMessage != "" {
+		cfg.OfflineMessage = "robot is offline"
 	}
 
 	logger.Infof("###### Settings START #######")
@@ -199,7 +199,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		}
 
 		if !isInService {
-			return replyText(reply, cfg.OfflineText)
+			return replyText(reply, cfg.OfflineMessage)
 		}
 
 		user := request.Sender().SenderID.UserID
