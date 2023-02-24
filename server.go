@@ -46,7 +46,7 @@ type FeishuBotConfig struct {
 }
 
 func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
-	if cfg.OfflineMessage != "" {
+	if cfg.OfflineMessage == "" {
 		cfg.OfflineMessage = "robot is offline"
 	}
 
