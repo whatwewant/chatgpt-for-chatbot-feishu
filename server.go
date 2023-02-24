@@ -200,10 +200,6 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 			}
 		}
 
-		if !isInService {
-			return replyText(reply, cfg.OfflineMessage)
-		}
-
 		user := request.Sender().SenderID.UserID
 
 		textMessage := strings.TrimSpace(text)
@@ -235,6 +231,11 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		if question == "" {
 			logger.Infof("ignore empty question message")
 			return nil
+		}
+
+		// @TODO 离线服务
+		if !isInService {
+			return replyText(reply, cfg.OfflineMessage)
 		}
 
 		go func() {
