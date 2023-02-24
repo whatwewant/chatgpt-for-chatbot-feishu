@@ -87,6 +87,12 @@ func main() {
 				EnvVars: []string{"LOGS_DIR"},
 				Value:   "/tmp/chatgpt-for-chatbot-feishu",
 			},
+			&cli.StringFlag{
+				Name:    "offline-message",
+				Usage:   "The message to use for offline status",
+				EnvVars: []string{"OFFLINE_MESSAGE"},
+				Value:   "robot is offline",
+			},
 		},
 	})
 
@@ -106,6 +112,7 @@ func main() {
 			FeishuBaseURI:     ctx.String("feishu-base-uri"),
 			ChatGPTContext:    ctx.String("chatgpt-context"),
 			ChatGPTLanguage:   ctx.String("chatgpt-language"),
+			OfflineMessage:    ctx.String("offline-message"),
 		})
 	})
 
