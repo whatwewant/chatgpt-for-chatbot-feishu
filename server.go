@@ -41,9 +41,15 @@ type FeishuBotConfig struct {
 	ChatGPTLanguage string
 	//
 	LogsDir string
+	//
+	OfflineMessage string
 }
 
 func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
+	if cfg.OfflineMessage == "" {
+		cfg.OfflineMessage = "robot is offline"
+	}
+
 	logger.Infof("###### Settings START #######")
 	logger.Infof("Serve at PORT: %d", cfg.Port)
 	logger.Infof("Serve at API_PATH: %s", cfg.APIPath)
@@ -71,6 +77,8 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		BaseURI:   cfg.FeishuBaseURI,
 	})
 	var botInfo *feishuBot.GetBotInfoResponse
+
+	isInService := true
 
 	tryToGetBotInfo := func() {
 		for {
@@ -121,28 +129,60 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		return fmt.Errorf("failed to create feishu chatbot: %v", err)
 	}
 
-	feishuchatbot.OnCommand("ping", &chatbot.Command{
-		Handler: func(args []string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
-			msgType, content, err := mc.
-				NewContent().
-				Post(&mc.ContentTypePost{
-					ZhCN: &mc.ContentTypePostBody{
-						Content: [][]mc.ContentTypePostBodyItem{
+	replyText := func(reply func(content string, msgType ...string) error, text string) error {
+		msgType, content, err := mc.
+			NewContent().
+			Post(&mc.ContentTypePost{
+				ZhCN: &mc.ContentTypePostBody{
+					Content: [][]mc.ContentTypePostBodyItem{
+						{
 							{
-								{
-									Tag:      "text",
-									UnEscape: true,
-									Text:     "pong",
-								},
+								Tag:      "text",
+								UnEscape: true,
+								Text:     text,
 							},
 						},
 					},
-				}).
-				Build()
-			if err != nil {
-				return fmt.Errorf("failed to build content: %v", err)
+				},
+			}).
+			Build()
+		if err != nil {
+			return fmt.Errorf("failed to build content: %v", err)
+		}
+		if err := reply(string(content), msgType); err != nil {
+			return fmt.Errorf("failed to reply: %v", err)
+		}
+
+		return nil
+	}
+
+	feishuchatbot.OnCommand("ping", &chatbot.Command{
+		Handler: func(args []string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
+			if err := replyText(reply, "pong"); err != nil {
+				return fmt.Errorf("failed to reply: %v", err)
 			}
-			if err := reply(string(content), msgType); err != nil {
+
+			return nil
+		},
+	})
+
+	feishuchatbot.OnCommand("offline", &chatbot.Command{
+		Handler: func(args []string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
+			isInService = false
+
+			if err := replyText(reply, "succeeed to offline"); err != nil {
+				return fmt.Errorf("failed to reply: %v", err)
+			}
+
+			return nil
+		},
+	})
+
+	feishuchatbot.OnCommand("online", &chatbot.Command{
+		Handler: func(args []string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
+			isInService = true
+
+			if err := replyText(reply, "succeeed to online"); err != nil {
 				return fmt.Errorf("failed to reply: %v", err)
 			}
 
@@ -191,6 +231,11 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		if question == "" {
 			logger.Infof("ignore empty question message")
 			return nil
+		}
+
+		// @TODO 离线服务
+		if !isInService {
+			return replyText(reply, cfg.OfflineMessage)
 		}
 
 		go func() {
