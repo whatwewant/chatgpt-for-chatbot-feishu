@@ -152,6 +152,8 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		if err := reply(string(content), msgType); err != nil {
 			return fmt.Errorf("failed to reply: %v", err)
 		}
+
+		return nil
 	}
 
 	feishuchatbot.OnCommand("ping", &chatbot.Command{
