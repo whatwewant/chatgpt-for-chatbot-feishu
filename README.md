@@ -146,6 +146,7 @@ $ docker-compose up -d
         * 接收群聊中@机器人消息事件: `im:message.group_at_msg:readonly`
         * 获取与更新群组信息: `im:chat`
         * 获取群组信息: `im:chat:readonly`
+        * [可选] 获取用户信息（如果设置管理员 ADMIN_EMAIL 则必须）: `contact:contact:readonly_as_app`
 
 * S3. 发布版本，等待企业管理员审核通过
 
