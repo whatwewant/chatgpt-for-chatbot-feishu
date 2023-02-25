@@ -115,6 +115,8 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 			if eventSender.User.EnterpriseEmail != cfg.AdminEmail && eventSender.User.Email != cfg.AdminEmail {
 				return fmt.Errorf("user(%s) is not allow to do action: %s", eventSender.User.Name, command)
 			}
+
+			return nil
 		}
 
 		return fmt.Errorf("admin email is not set, not allow to do action: %s", command)
