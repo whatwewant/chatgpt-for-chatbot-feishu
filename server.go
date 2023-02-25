@@ -11,6 +11,7 @@ import (
 
 	"github.com/go-zoox/core-utils/fmt"
 	"github.com/go-zoox/feishu"
+	"github.com/go-zoox/feishu/contact/user"
 	mc "github.com/go-zoox/feishu/message/content"
 
 	chatgpt "github.com/go-zoox/chatgpt-client"
@@ -43,6 +44,8 @@ type FeishuBotConfig struct {
 	LogsDir string
 	//
 	OfflineMessage string
+	//
+	AdminEmail string
 }
 
 func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
@@ -97,6 +100,49 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 			logger.Infof("Feishu Bot Online ...")
 			time.Sleep(3 * time.Second)
 		}
+	}
+
+	isAllowToDo := func(request *feishuEvent.EventRequest, command string) (reason error) {
+		if cfg.AdminEmail != "" {
+			eventSender, err := bot.Contact().User().Retrieve(&user.RetrieveRequest{
+				UserIDType: "open_id",
+				UserID:     request.Sender().SenderID.OpenID,
+			})
+			if err != nil {
+				return fmt.Errorf("failed to retrieve user with openid(%s): %v", request.Sender().SenderID.OpenID, err)
+			}
+
+			if eventSender.User.EnterpriseEmail != cfg.AdminEmail && eventSender.User.Email != cfg.AdminEmail {
+				return fmt.Errorf("user(%s) is not allow to do action: %s", eventSender.User.Name, command)
+			}
+		}
+
+		return fmt.Errorf("admin email is not set, not allow to do action: %s", command)
+	}
+
+	getUser := func(request *feishuEvent.EventRequest) (*user.RetrieveResponse, error) {
+		sender := request.Sender()
+
+		if cfg.AdminEmail != "" {
+			eventSender, err := bot.Contact().User().Retrieve(&user.RetrieveRequest{
+				UserIDType: "open_id",
+				UserID:     sender.SenderID.OpenID,
+			})
+			if err != nil {
+				return nil, fmt.Errorf("failed to retrieve user with openid(%s): %v", sender.SenderID.OpenID, err)
+			}
+
+			return eventSender, nil
+		}
+
+		return &user.RetrieveResponse{
+			User: user.UserEntity{
+				Name:    sender.SenderID.UserID,
+				OpenID:  sender.SenderID.OpenID,
+				UnionID: sender.SenderID.UnionID,
+				UserID:  sender.SenderID.UserID,
+			},
+		}, nil
 	}
 
 	go func() {
@@ -168,6 +214,10 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 
 	feishuchatbot.OnCommand("offline", &chatbot.Command{
 		Handler: func(args []string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
+			if err := isAllowToDo(request, "online"); err != nil {
+				return err
+			}
+
 			isInService = false
 
 			if err := replyText(reply, "succeeed to offline"); err != nil {
@@ -180,6 +230,10 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 
 	feishuchatbot.OnCommand("online", &chatbot.Command{
 		Handler: func(args []string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
+			if err := isAllowToDo(request, "online"); err != nil {
+				return err
+			}
+
 			isInService = true
 
 			if err := replyText(reply, "succeeed to online"); err != nil {
@@ -200,7 +254,10 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 			}
 		}
 
-		user := request.Sender().SenderID.UserID
+		user, err := getUser(request)
+		if err != nil {
+			return fmt.Errorf("failed to get user: %v", err)
+		}
 
 		textMessage := strings.TrimSpace(text)
 		if textMessage == "" {
@@ -239,7 +296,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		}
 
 		go func() {
-			logger.Infof("%s 问：%s", user, question)
+			logger.Infof("%s 问 ChatGPT：%s", user.User.Name, question)
 			var err error
 
 			conversation, err := client.GetOrCreateConversation(request.ChatID(), &chatgpt.ConversationConfig{
@@ -261,7 +318,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 
 				answer, err = conversation.Ask([]byte(question), &chatgpt.ConversationAskConfig{
 					ID:   request.Event.Message.MessageID,
-					User: user,
+					User: user.User.Name,
 				})
 				if err != nil {
 					logger.Errorf("failed to request answer: %v", err)
@@ -288,7 +345,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 				return
 			}
 
-			logger.Infof("ChatGPT 答：%s", answer)
+			logger.Infof("ChatGPT 答 %s：%s", user.User.Name, answer)
 			responseMessage := string(answer)
 			if request.IsGroupChat() {
 				responseMessage = fmt.Sprintf("%s\n-------------\n%s", question, answer)
