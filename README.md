@@ -118,6 +118,8 @@ $ docker-compose up -d
 * `AUTH_TOKEN`: 付费用户 Auth Token
 * `SUBDOMAIN`: 指定固定子域名
 * `LOGS_DIR`: 自定义日志目录
+* `ADMIN_EMAIL`: 管理员企业邮箱
+* `OFFLINE_MESSAGE`：离线自动回复内容
 
 ## 飞书应用配置和 OpenAI 相关步骤
 
@@ -192,6 +194,12 @@ $ docker-compose up -d
 </p>
 
 ### 更新日志
+
+* 2023.02.25 支持设置管理员，用于执行命令，环境变量：`ADMIN_ENV`
+
+* 2023.02.25 支持自定义离线自动回复内容，环境变量：`OFFLINE_MESSAGE`
+
+* 2023.02.25 内置上线（/online）、下线（/offline）命令
 
 * 2023.02.23 修复 CI Docker Image Tag latest
 
