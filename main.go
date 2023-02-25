@@ -93,6 +93,11 @@ func main() {
 				EnvVars: []string{"OFFLINE_MESSAGE"},
 				Value:   "robot is offline",
 			},
+			&cli.StringFlag{
+				Name:    "admin-email",
+				Usage:   "Sets the admin with admin email, who can run commands",
+				EnvVars: []string{"ADMIN_EMAIL"},
+			},
 		},
 	})
 
@@ -113,6 +118,7 @@ func main() {
 			ChatGPTContext:    ctx.String("chatgpt-context"),
 			ChatGPTLanguage:   ctx.String("chatgpt-language"),
 			OfflineMessage:    ctx.String("offline-message"),
+			AdminEmail:        ctx.String("admin-email"),
 		})
 	})
 
