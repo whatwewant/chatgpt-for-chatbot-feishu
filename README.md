@@ -156,7 +156,7 @@ $ docker-compose up -d
 
 ### 更多交流
 
-可以创建 Issue 或者加微信，备注来自：ChatGPT-For-ChatBot-Feishu，加入微信群群沟通
+可以创建 Issue 或者加微信，备注来自：ChatGPT-For-ChatBot-Feishu，加入微信群沟通
 
 <p align="center">
   <img src="./docs/assets/images/wechat.qrcode.jpeg" alt="" width="300" />
@@ -188,10 +188,6 @@ $ docker-compose up -d
 
 ### 商业服务
 * 联系上面的微信，付费提供技术支持服务，快速接入，有需要的请加微信沟通。
-
-<p align="center">
-  <img src="./docs/assets/images/wechat.qrcode.jpeg" alt="" width="300" />
-</p>
 
 ### 更新日志
 
