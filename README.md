@@ -70,7 +70,7 @@ $ zmicro package install chatgpt-for-chatbot-feishu
 # 准备环境飞书 APP ID/Secret 和 OpenAI/ChatGPT API Key
 $ export APP_ID=<YOUR_FEISHU_APP_ID>
 $ export APP_SECRET=<YOUR_FEISHU_APP_SECRET>
-$ export CHATGPT_API_KEY=<YOUR_CHATGPT_API_KEY>
+$ export OPENAI_API_KEY=<YOUR_OPENAI_API_KEY>
 
 # 运行
 $ zmicro chatgpt-for-chatbot-feishu
@@ -90,7 +90,7 @@ services:
   environment:
     APP_ID: "<YOUR_FEISHU_APP_ID>"
     APP_SECRET: "<YOUR_FEISHU_APP_SECRET>"
-    CHATGPT_API_KEY: "<YOUR_CHATGPT_API_KEY>"
+    OPENAI_API_KEY: "<YOUR_OPENAI_API_KEY>"
 ```
 
 ```bash

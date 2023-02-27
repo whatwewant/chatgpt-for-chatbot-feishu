@@ -24,7 +24,7 @@ import (
 type FeishuBotConfig struct {
 	Port              int64
 	APIPath           string
-	ChatGPTAPIKey     string
+	OpenAIAPIKey      string
 	AppID             string
 	AppSecret         string
 	EncryptKey        string
@@ -68,7 +68,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 	}
 
 	client, err := chatgpt.New(&chatgpt.Config{
-		APIKey:               cfg.ChatGPTAPIKey,
+		APIKey:               cfg.OpenAIAPIKey,
 		ConversationContext:  cfg.ChatGPTContext,
 		ConversationLanguage: cfg.ChatGPTLanguage,
 		ChatGPTName:          cfg.BotName,
