@@ -24,9 +24,9 @@ func main() {
 				Value:   "/",
 			},
 			&cli.StringFlag{
-				Name:     "chatgpt-api-key",
-				Usage:    "ChatGPT API Key",
-				EnvVars:  []string{"CHATGPT_API_KEY"},
+				Name:     "openai-api-key",
+				Usage:    "OpenAI API Key",
+				EnvVars:  []string{"OPENAI_API_KEY"},
 				Required: true,
 			},
 			&cli.StringFlag{
@@ -111,7 +111,7 @@ func main() {
 			LogsDir:           ctx.String("logs-dir"),
 			Port:              ctx.Int64("port"),
 			APIPath:           ctx.String("api-path"),
-			ChatGPTAPIKey:     ctx.String("chatgpt-api-key"),
+			OpenAIAPIKey:      ctx.String("openai-api-key"),
 			AppID:             ctx.String("app-id"),
 			AppSecret:         ctx.String("app-secret"),
 			EncryptKey:        ctx.String("encrypt-key"),

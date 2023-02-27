@@ -6,7 +6,7 @@ services:
     image: whatwewant/chatgpt-for-chatbot-feishu:v1.2.18
     # command: sleep infinityd
     environment:
-      CHATGPT_API_KEY: ${CHATGPT_API_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
       APP_ID: ${APP_ID}
       APP_SECRET: ${APP_SECRET}
       TUNNEL_ENABLE: "true"
