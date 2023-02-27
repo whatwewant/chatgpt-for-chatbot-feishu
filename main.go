@@ -98,6 +98,11 @@ func main() {
 				Usage:   "Sets the admin with admin email, who can run commands",
 				EnvVars: []string{"ADMIN_EMAIL"},
 			},
+			&cli.StringFlag{
+				Name:    "bot-name",
+				Usage:   "Sets the bot name, default: ChatGPT",
+				EnvVars: []string{"BOT_NAME"},
+			},
 		},
 	})
 
@@ -119,6 +124,7 @@ func main() {
 			ChatGPTLanguage:   ctx.String("chatgpt-language"),
 			OfflineMessage:    ctx.String("offline-message"),
 			AdminEmail:        ctx.String("admin-email"),
+			BotName:           ctx.String("bot-name"),
 		})
 	})
 

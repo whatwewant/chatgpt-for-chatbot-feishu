@@ -46,6 +46,8 @@ type FeishuBotConfig struct {
 	OfflineMessage string
 	//
 	AdminEmail string
+	//
+	BotName string
 }
 
 func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
@@ -69,6 +71,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		APIKey:               cfg.ChatGPTAPIKey,
 		ConversationContext:  cfg.ChatGPTContext,
 		ConversationLanguage: cfg.ChatGPTLanguage,
+		ChatGPTName:          cfg.BotName,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to create chatgpt client: %v", err)
