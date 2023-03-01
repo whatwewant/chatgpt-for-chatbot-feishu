@@ -76,8 +76,8 @@ github.com/go-zoox/encoding v1.2.1 h1:38rQRsfL1f1YHZaqsPaGcNMkPnzatnPlYiHioUh9F4
 github.com/go-zoox/encoding v1.2.1/go.mod h1:NdcM7Ln73oVW3vJgx3MH4fJknCcdQfq+NgJ0tuCo7tU=
 github.com/go-zoox/errors v1.0.2 h1:1NLMoEVlDU1+qrvvPj+rrJXOvQPdeZ3DekVBFrI5PFY=
 github.com/go-zoox/errors v1.0.2/go.mod h1:HJ5NKQb9cu3IbI0Jayw7xZiblLBEIglpaIOMxvQnWnk=
-github.com/go-zoox/feishu v1.3.9 h1:JZp5uisgpUP2NO2LgOpD4XMeO7G2LrdcPGEJcfAFGNc=
-github.com/go-zoox/feishu v1.3.9/go.mod h1:Wz3RsfxM9mZEMvsFR1tHbkqrjk9XvXioQo8Gnr5kvbk=
+github.com/go-zoox/feishu v1.3.10 h1:pqwkH9ZyENmWf0T/vPU8FsgSCZUK8vrQri04ZdtDo+M=
+github.com/go-zoox/feishu v1.3.10/go.mod h1:Wz3RsfxM9mZEMvsFR1tHbkqrjk9XvXioQo8Gnr5kvbk=
 github.com/go-zoox/fetch v1.3.5/go.mod h1:AkS6v/DlotjmUs+7qJsoFGFkpROr9LVtiKYb000v3Kw=
 github.com/go-zoox/fetch v1.4.4/go.mod h1:WExVnds3HZ1A6jJu9KuqtICfkJpvUdR4uONUnw9TG+0=
 github.com/go-zoox/fetch v1.7.4 h1:kNcqBldXSB40dToLYveuNFSqtkMbd2U0ZrYmPQGmo9E=
