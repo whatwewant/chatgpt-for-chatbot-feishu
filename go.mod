@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/go-zoox/chalk v1.0.2
 	github.com/go-zoox/chatbot-feishu v1.2.7
-	github.com/go-zoox/chatgpt-client v1.3.1
+	github.com/go-zoox/chatgpt-client v1.3.3
 	github.com/go-zoox/cli v1.2.0
 	github.com/go-zoox/core-utils v1.2.7
 	github.com/go-zoox/debug v1.0.1
@@ -31,14 +31,14 @@ require (
 	github.com/go-zoox/dotenv v1.2.3 // indirect
 	github.com/go-zoox/encoding v1.2.1 // indirect
 	github.com/go-zoox/errors v1.0.2 // indirect
-	github.com/go-zoox/fetch v1.7.4 // indirect
+	github.com/go-zoox/fetch v1.7.5 // indirect
 	github.com/go-zoox/gzip v1.0.0 // indirect
 	github.com/go-zoox/headers v1.0.5 // indirect
 	github.com/go-zoox/jobqueue v1.0.0 // indirect
 	github.com/go-zoox/jwt v1.2.0 // indirect
 	github.com/go-zoox/kv v1.5.0 // indirect
 	github.com/go-zoox/lru v1.0.1 // indirect
-	github.com/go-zoox/openai-client v1.2.0 // indirect
+	github.com/go-zoox/openai-client v1.2.1 // indirect
 	github.com/go-zoox/proxy v1.3.6 // indirect
 	github.com/go-zoox/random v1.0.3 // indirect
 	github.com/go-zoox/ratelimit v1.2.0 // indirect

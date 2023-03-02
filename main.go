@@ -103,6 +103,11 @@ func main() {
 				Usage:   "Sets the bot name, default: ChatGPT",
 				EnvVars: []string{"BOT_NAME"},
 			},
+			&cli.StringFlag{
+				Name:    "proxy",
+				Usage:   "Sets the request proxy",
+				EnvVars: []string{"PROXY", "HTTPS_PROXY"},
+			},
 		},
 	})
 
@@ -125,6 +130,7 @@ func main() {
 			OfflineMessage:    ctx.String("offline-message"),
 			AdminEmail:        ctx.String("admin-email"),
 			BotName:           ctx.String("bot-name"),
+			Proxy:             ctx.String("proxy"),
 		})
 	})
 
