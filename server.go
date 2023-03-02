@@ -48,6 +48,14 @@ type FeishuBotConfig struct {
 	AdminEmail string
 	//
 	BotName string
+
+	// Proxy sets the request proxy.
+	// support http, https, socks5
+	// example:
+	//   http://127.0.0.1:17890
+	//   https://127.0.0.1:17890
+	//   socks5://127.0.0.1:17890
+	Proxy string
 }
 
 func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
@@ -73,6 +81,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		ConversationContext:  cfg.ChatGPTContext,
 		ConversationLanguage: cfg.ChatGPTLanguage,
 		ChatGPTName:          cfg.BotName,
+		Proxy:                cfg.Proxy,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to create chatgpt client: %v", err)
