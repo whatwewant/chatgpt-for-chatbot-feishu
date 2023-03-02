@@ -15,7 +15,7 @@
 * [七、更多交流](#更多交流)
 * [八、相关资源](#相关资源)
 * [九、更新日志](#更新日志)
-* [License]
+* [LICENSE](#LICENSE)
 
 ## 预览
 ![](./docs/assets/images/chatgpt.chat.group.png)
@@ -213,6 +213,6 @@ $ docker-compose up -d
 
 * 2023.02.20 内置支持 tunnel，目前支持 cpolar，ngrok，一键部署版本支持通过 `zmicro service upgrade chatgpt-for-chatbot-feishu` 快速升级，按提示操作即可，使用更加简单
 
-### License
+### LICENSE
 
 MIT © [whatwewant](./LICENSE)
