@@ -28,6 +28,10 @@
 * [x] 支持群聊
   * [x] 支持 @ 机器人回复
   * [x] 也支持命令（`/chatgpt`）触发，格式：`/chatgpt 你的问题`
+* [x] 支持自定义 OpenAI 模型
+* [x] 支持自定义语言（请查看高级配置）
+* [x] 支持自定义上下文（请查看高级配置）
+* [x] 支持 Docker
 * [x] 支持配置启动反向代理
   * [x] [cpolar](https://www.cpolar.com/)
   * [x] [ngrok](https://ngrok.com/)
@@ -79,11 +83,10 @@ $ zmicro chatgpt-for-chatbot-feishu
 
 ```yaml
 # docker-compose.yaml
-version: "3.7"
-
 services:
   chatgpt-for-chatbot-feishu:
   image: whatwewant/chatgpt-for-chatbot-feishu:latest
+  platform: linux/amd64
   ports:
     - 8080:8080
   environment:
@@ -97,12 +100,6 @@ services:
 $ docker-compose up -d
 ```
 
-### 二次开发
-
-```bash
-# 支持 Go-Zoox 中间件
-```
-
 ## 高级环境配置（可选）
 * `API_PATH`: 自定义 WebHook 路径
 * `ENCRYPT_KEY`: 飞书事件密钥
@@ -111,7 +108,7 @@ $ docker-compose up -d
 * `OPENAI_MODEL`: 自定义 OpenAI 模型
 * `FEISHU_BASE_URI`: 私有部署飞书地址
 * `CHATGPT_CONTEXT_MESSAGE`: 自定义上下文消息
-* `CHATGPT_LANGUAGE`: 自定义机器人初始语言
+* `CHATGPT_LANGUAGE`: 自定义机器人初始语言，默认是英文，如需中文（ZH_CN)
 * `TUNNEL_ENABLE`: 启用 Ngrok
 * `TUNNEL_TYPE`: 指定隧道类型，可选项：ngrok | cpolar
 * `AUTH_TOKEN`: 付费用户 Auth Token
