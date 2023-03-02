@@ -56,6 +56,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 	}
 
 	logger.Infof("###### Settings START #######")
+	logger.Infof("Serve Version: %s", Version)
 	logger.Infof("Serve at PORT: %d", cfg.Port)
 	logger.Infof("Serve at API_PATH: %s", cfg.APIPath)
 	logger.Infof("###### Settings END #######")
@@ -156,7 +157,8 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 
 	if debug.IsDebugMode() {
 		fmt.PrintJSON(map[string]interface{}{
-			"cfg": cfg,
+			"version": Version,
+			"cfg":     cfg,
 		})
 	}
 
