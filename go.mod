@@ -14,7 +14,7 @@ require (
 	github.com/go-zoox/openai-client v1.2.1
 	github.com/go-zoox/proxy v1.3.6
 	github.com/go-zoox/retry v1.0.3
-	github.com/go-zoox/zoox v1.8.7
+	github.com/go-zoox/zoox v1.8.9
 )
 
 require (
