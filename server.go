@@ -13,6 +13,7 @@ import (
 	"github.com/go-zoox/proxy/utils/rewriter"
 	"github.com/go-zoox/zoox"
 	"github.com/go-zoox/zoox/defaults"
+	"github.com/go-zoox/zoox/middleware"
 
 	"github.com/go-zoox/core-utils/fmt"
 	"github.com/go-zoox/feishu"
@@ -448,37 +449,21 @@ func run(
 			return fmt.Errorf("env ProxyOpenAIAPIToken is required when ProxyOpenAIAPIPath sets")
 		}
 
-		// // app.Get(ProxyOpenAIAPIPath, func(ctx *zoox.Context) {
-		// // 	ctx.String(200, "fuccc")
-		// // })
-		// app.Group(ProxyOpenAIAPIPath, func(group *zoox.RouterGroup) {
-		// 	// app.Use(middleware.BearerToken(strings.Split(ProxyOpenAIAPIToken, ",")))
-		// 	app.Proxy("", OpenAIAPIServer, &proxy.SingleTargetConfig{
-		// 		RequestHeaders: http.Header{
-		// 			"Authorization": []string{fmt.Sprintf("Bearer %s", OpenAIAPIKey)},
-		// 			"User-Agent":    []string{fmt.Sprintf("GoZoox/ChatGPT-for-ChatBot-Feishu@%s", Version)},
-		// 		},
-		// 		Rewrites: rewriter.Rewriters{
-		// 			{
-		// 				From: fmt.Sprintf("^%s/(.*)$", ProxyOpenAIAPIPath),
-		// 				To:   "/$1",
-		// 			},
-		// 		},
-		// 	})
-		// })
+		app.Group(ProxyOpenAIAPIPath, func(group *zoox.RouterGroup) {
+			group.Use(middleware.BearerToken(strings.Split(ProxyOpenAIAPIToken, ",")))
 
-		// app.Use(middleware.BearerToken(strings.Split(ProxyOpenAIAPIToken, ",")))
-		app.Proxy(ProxyOpenAIAPIPath, OpenAIAPIServer, &proxy.SingleTargetConfig{
-			RequestHeaders: http.Header{
-				"Authorization": []string{fmt.Sprintf("Bearer %s", OpenAIAPIKey)},
-				"User-Agent":    []string{fmt.Sprintf("GoZoox/ChatGPT-for-ChatBot-Feishu@%s", Version)},
-			},
-			Rewrites: rewriter.Rewriters{
-				{
-					From: fmt.Sprintf("^%s/(.*)$", ProxyOpenAIAPIPath),
-					To:   "/$1",
+			group.Proxy("/", OpenAIAPIServer, &proxy.SingleTargetConfig{
+				RequestHeaders: http.Header{
+					"Authorization": []string{fmt.Sprintf("Bearer %s", OpenAIAPIKey)},
+					"User-Agent":    []string{fmt.Sprintf("GoZoox/ChatGPT-for-ChatBot-Feishu@%s", Version)},
 				},
-			},
+				Rewrites: rewriter.Rewriters{
+					{
+						From: fmt.Sprintf("^%s/(.*)$", ProxyOpenAIAPIPath),
+						To:   "/$1",
+					},
+				},
+			})
 		})
 	}
 
