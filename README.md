@@ -86,14 +86,14 @@ $ zmicro chatgpt-for-chatbot-feishu
 # docker-compose.yaml
 services:
   chatgpt-for-chatbot-feishu:
-  image: whatwewant/chatgpt-for-chatbot-feishu:latest
-  platform: linux/amd64
-  ports:
-    - 8080:8080
-  environment:
-    APP_ID: "<YOUR_FEISHU_APP_ID>"
-    APP_SECRET: "<YOUR_FEISHU_APP_SECRET>"
-    OPENAI_API_KEY: "<YOUR_OPENAI_API_KEY>"
+    image: whatwewant/chatgpt-for-chatbot-feishu:latest
+    platform: linux/amd64
+    ports:
+      - 8080:8080
+    environment:
+      APP_ID: "<YOUR_FEISHU_APP_ID>"
+      APP_SECRET: "<YOUR_FEISHU_APP_SECRET>"
+      OPENAI_API_KEY: "<YOUR_OPENAI_API_KEY>"
 ```
 
 ```bash
