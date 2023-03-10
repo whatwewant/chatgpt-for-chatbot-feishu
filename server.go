@@ -1,13 +1,19 @@
 package main
 
 import (
-	"strings"
+	"net/http"
 	"time"
 
 	"github.com/go-zoox/chalk"
 	"github.com/go-zoox/chatbot-feishu"
 	"github.com/go-zoox/core-utils/regexp"
-	"github.com/go-zoox/debug"
+	"github.com/go-zoox/core-utils/strings"
+	openaiclient "github.com/go-zoox/openai-client"
+	"github.com/go-zoox/proxy"
+	"github.com/go-zoox/proxy/utils/rewriter"
+	"github.com/go-zoox/zoox"
+	"github.com/go-zoox/zoox/defaults"
+	"github.com/go-zoox/zoox/middleware"
 
 	"github.com/go-zoox/core-utils/fmt"
 	"github.com/go-zoox/feishu"
@@ -56,6 +62,13 @@ type FeishuBotConfig struct {
 	//   https://127.0.0.1:17890
 	//   socks5://127.0.0.1:17890
 	Proxy string
+
+	OpenAIAPIServer string
+
+	// ProxyOpenAIAPIPath proxys the OpenAPI API (https://api.openai.com)
+	ProxyOpenAIAPIPath string
+	// ProxyOpenAIAPIToken limits auth  with Bearer Token
+	ProxyOpenAIAPIToken string
 }
 
 func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
@@ -78,6 +91,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 
 	client, err := chatgpt.New(&chatgpt.Config{
 		APIKey:               cfg.OpenAIAPIKey,
+		APIServer:            cfg.OpenAIAPIServer,
 		ConversationContext:  cfg.ChatGPTContext,
 		ConversationLanguage: cfg.ChatGPTLanguage,
 		ChatGPTName:          cfg.BotName,
@@ -164,12 +178,12 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		tryToGetBotInfo()
 	}()
 
-	if debug.IsDebugMode() {
-		fmt.PrintJSON(map[string]interface{}{
-			"version": Version,
-			"cfg":     cfg,
-		})
-	}
+	// if debug.IsDebugMode() {
+	fmt.PrintJSON(map[string]interface{}{
+		"version": Version,
+		"cfg":     cfg,
+	})
+	// }
 
 	if cfg.SiteURL != "" {
 		logger.Infof("")
@@ -396,5 +410,62 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		return nil
 	})
 
-	return feishuchatbot.Run()
+	// return feishuchatbot.Run()
+
+	return run(
+		feishuchatbot,
+		cfg.Port,
+		cfg.APIPath,
+		cfg.OpenAIAPIKey,
+		cfg.OpenAIAPIServer,
+		cfg.ProxyOpenAIAPIPath,
+		cfg.ProxyOpenAIAPIToken,
+	)
+}
+
+func run(
+	chatbot chatbot.ChatBot,
+	port int64,
+	path string,
+	OpenAIAPIKey string,
+	OpenAIAPIServer string,
+	ProxyOpenAIAPIPath string,
+	ProxyOpenAIAPIToken string,
+) error {
+	if OpenAIAPIServer == "" {
+		OpenAIAPIServer = openaiclient.DefaultAPIServer
+	}
+
+	app := defaults.Application()
+
+	app.Post(path, chatbot.Handler())
+
+	app.Get(path, func(ctx *zoox.Context) {
+		ctx.String(200, "OK")
+	})
+
+	if ProxyOpenAIAPIPath != "" {
+		if ProxyOpenAIAPIToken == "" {
+			return fmt.Errorf("env ProxyOpenAIAPIToken is required when ProxyOpenAIAPIPath sets")
+		}
+
+		app.Group(ProxyOpenAIAPIPath, func(group *zoox.RouterGroup) {
+			group.Use(middleware.BearerToken(strings.Split(ProxyOpenAIAPIToken, ",")))
+
+			group.Proxy("/", OpenAIAPIServer, &proxy.SingleTargetConfig{
+				RequestHeaders: http.Header{
+					"Authorization": []string{fmt.Sprintf("Bearer %s", OpenAIAPIKey)},
+					"User-Agent":    []string{fmt.Sprintf("GoZoox/ChatGPT-for-ChatBot-Feishu@%s", Version)},
+				},
+				Rewrites: rewriter.Rewriters{
+					{
+						From: fmt.Sprintf("^%s/(.*)$", ProxyOpenAIAPIPath),
+						To:   "/$1",
+					},
+				},
+			})
+		})
+	}
+
+	return app.Run(fmt.Sprintf(":%d", port))
 }
