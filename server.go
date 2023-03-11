@@ -44,8 +44,8 @@ type FeishuBotConfig struct {
 	//
 	FeishuBaseURI string
 	//
-	ChatGPTContext  string
-	ChatGPTLanguage string
+	ConversationContext  string
+	ConversationLanguage string
 	//
 	LogsDir string
 	//
@@ -92,8 +92,8 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 	client, err := chatgpt.New(&chatgpt.Config{
 		APIKey:               cfg.OpenAIAPIKey,
 		APIServer:            cfg.OpenAIAPIServer,
-		ConversationContext:  cfg.ChatGPTContext,
-		ConversationLanguage: cfg.ChatGPTLanguage,
+		ConversationContext:  cfg.ConversationContext,
+		ConversationLanguage: cfg.ConversationLanguage,
 		ChatGPTName:          cfg.BotName,
 		Proxy:                cfg.Proxy,
 	})
