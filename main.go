@@ -79,12 +79,12 @@ func main() {
 			&cli.StringFlag{
 				Name:    "conversation-context",
 				Usage:   "Custom chatgpt conversation context",
-				EnvVars: []string{"CHATGPT_CONTEXT_MESSAGE"},
+				EnvVars: []string{"CONVERSATION_CONTEXT"},
 			},
 			&cli.StringFlag{
 				Name:    "conversation-language",
 				Usage:   "Custom chatgpt conversation lanuage",
-				EnvVars: []string{"CHATGPT_LANGUAGE"},
+				EnvVars: []string{"CONVERSATION_LANGUAGE"},
 			},
 			&cli.StringFlag{
 				Name:    "logs-dir",
