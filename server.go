@@ -274,6 +274,29 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		},
 	})
 
+	feishuchatbot.OnCommand("model", &chatbot.Command{
+		Handler: func(args []string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
+			if err := isAllowToDo(request, "model"); err != nil {
+				return err
+			}
+
+			model := args[0]
+			if model == "" {
+				return fmt.Errorf("model name is required (args: %s)", strings.Join(args, " "))
+			}
+
+			if err := client.ChangeConversationModel(request.ChatID(), model); err != nil {
+				return fmt.Errorf("failed to set model(%s) for conversation(%d)", model, request.ChatID())
+			}
+
+			if err := replyText(reply, "succeeed to model"); err != nil {
+				return fmt.Errorf("failed to reply: %v", err)
+			}
+
+			return nil
+		},
+	})
+
 	feishuchatbot.OnMessage(func(text string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
 		// fmt.PrintJSON(request)
 		if botInfo == nil {
