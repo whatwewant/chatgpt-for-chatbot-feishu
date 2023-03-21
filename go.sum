@@ -38,8 +38,8 @@ github.com/go-yaml/yaml v2.1.0+incompatible/go.mod h1:w2MrLa16VYP0jy6N7M5kHaCkaL
 github.com/go-zoox/chalk v1.0.1/go.mod h1:z5+qvE9nEJI5uT4px2tyoFa/xxkqf3CUo22KmXLKbNI=
 github.com/go-zoox/chalk v1.0.2 h1:DCWft37fogmvqF37JdbGSLg28L/tQeA8u0lMvb62KOg=
 github.com/go-zoox/chalk v1.0.2/go.mod h1:z5+qvE9nEJI5uT4px2tyoFa/xxkqf3CUo22KmXLKbNI=
-github.com/go-zoox/chatbot-feishu v1.2.8 h1:ortEcUNVbFPYX0C2spXxllDWVcvyA2KAaXIE9PwwM0U=
-github.com/go-zoox/chatbot-feishu v1.2.8/go.mod h1:PC+7ZXdsXljFzIeTTxjKHne07kT3ospjfWx/aEGPI18=
+github.com/go-zoox/chatbot-feishu v1.2.9 h1:eSMufO7oO94wh1B4n1k+EXeEYvPnHcCC08vD0vfbnIc=
+github.com/go-zoox/chatbot-feishu v1.2.9/go.mod h1:DOYszjwta05Xg87acn2+CtmROLEqanHjwxROn4FpGzE=
 github.com/go-zoox/chatgpt-client v1.4.3 h1:4NrIoA2S5R5RyyEGBadYDavDdr7WVup5EKI9erWAvmA=
 github.com/go-zoox/chatgpt-client v1.4.3/go.mod h1:zbs/hCS8MkxEvuYc4bODF4u/c5ji1J17gCBNYDIZZcI=
 github.com/go-zoox/cli v1.2.0 h1:qBDHwcv2o5xgqGpYokxSszs8MVdNzaNZJJroAhpevFM=
@@ -76,8 +76,8 @@ github.com/go-zoox/encoding v1.2.1 h1:38rQRsfL1f1YHZaqsPaGcNMkPnzatnPlYiHioUh9F4
 github.com/go-zoox/encoding v1.2.1/go.mod h1:NdcM7Ln73oVW3vJgx3MH4fJknCcdQfq+NgJ0tuCo7tU=
 github.com/go-zoox/errors v1.0.2 h1:1NLMoEVlDU1+qrvvPj+rrJXOvQPdeZ3DekVBFrI5PFY=
 github.com/go-zoox/errors v1.0.2/go.mod h1:HJ5NKQb9cu3IbI0Jayw7xZiblLBEIglpaIOMxvQnWnk=
-github.com/go-zoox/feishu v1.3.10 h1:pqwkH9ZyENmWf0T/vPU8FsgSCZUK8vrQri04ZdtDo+M=
-github.com/go-zoox/feishu v1.3.10/go.mod h1:Wz3RsfxM9mZEMvsFR1tHbkqrjk9XvXioQo8Gnr5kvbk=
+github.com/go-zoox/feishu v1.3.11 h1:5B6GSxrmy01s6UXKvY7s0TfvlYC+va4ftSN1DbU6ZoI=
+github.com/go-zoox/feishu v1.3.11/go.mod h1:Wz3RsfxM9mZEMvsFR1tHbkqrjk9XvXioQo8Gnr5kvbk=
 github.com/go-zoox/fetch v1.3.5/go.mod h1:AkS6v/DlotjmUs+7qJsoFGFkpROr9LVtiKYb000v3Kw=
 github.com/go-zoox/fetch v1.4.4/go.mod h1:WExVnds3HZ1A6jJu9KuqtICfkJpvUdR4uONUnw9TG+0=
 github.com/go-zoox/fetch v1.7.5 h1:tFn0trv9xbhDsxU7rXOyM4RXmvfOAnDFOnK9Ve9PaJ4=

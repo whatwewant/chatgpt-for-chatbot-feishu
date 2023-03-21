@@ -420,9 +420,9 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 
 			logger.Infof("ChatGPT 答 %s：%s", user.User.Name, answer)
 			responseMessage := string(answer)
-			if request.IsGroupChat() {
-				responseMessage = fmt.Sprintf("%s\n-------------\n%s", question, answer)
-			}
+			// if request.IsGroupChat() {
+			// 	responseMessage = fmt.Sprintf("%s\n-------------\n%s", question, answer)
+			// }
 
 			msgType, content, err := mc.
 				NewContent().
