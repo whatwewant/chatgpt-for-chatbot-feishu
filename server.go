@@ -250,7 +250,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 
 			isInService = false
 
-			if err := replyText(reply, "succeeed to offline"); err != nil {
+			if err := replyText(reply, "succeed to offline"); err != nil {
 				return fmt.Errorf("failed to reply: %v", err)
 			}
 
@@ -266,7 +266,50 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 
 			isInService = true
 
-			if err := replyText(reply, "succeeed to online"); err != nil {
+			if err := replyText(reply, "succeed to online"); err != nil {
+				return fmt.Errorf("failed to reply: %v", err)
+			}
+
+			return nil
+		},
+	})
+
+	feishuchatbot.OnCommand("model", &chatbot.Command{
+		ArgsLength: 1,
+		Handler: func(args []string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
+			if err := isAllowToDo(request, "model"); err != nil {
+				return err
+			}
+
+			if len(args) == 0 || args[0] == "" {
+				currentModel, err := client.GetConversationModel(request.ChatID(), &chatgpt.ConversationConfig{
+					MaxMessages: 50,
+					Model:       cfg.OpenAIModel,
+				})
+				if err != nil {
+					return fmt.Errorf("failed to get model by conversation(%s)", request.ChatID())
+				}
+
+				if err := replyText(reply, fmt.Sprintf("当前模型：%s", currentModel)); err != nil {
+					return fmt.Errorf("failed to reply: %v", err)
+				}
+
+				return nil
+			}
+
+			model := args[0]
+			if model == "" {
+				return fmt.Errorf("model name is required (args: %s)", strings.Join(args, " "))
+			}
+
+			if err := client.ChangeConversationModel(request.ChatID(), model, &chatgpt.ConversationConfig{
+				MaxMessages: 50,
+				Model:       cfg.OpenAIModel,
+			}); err != nil {
+				return fmt.Errorf("failed to set model(%s) for conversation(%s)", model, request.ChatID())
+			}
+
+			if err := replyText(reply, fmt.Sprintf("succeed to set model: %s", model)); err != nil {
 				return fmt.Errorf("failed to reply: %v", err)
 			}
 
