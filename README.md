@@ -4,6 +4,7 @@
 
 * [一、预览](#预览)
 * [二、功能支持](#功能支持)
+  * [高级指令](#高级指令)
 * [三、项目特点](#项目特点)
 * [四、部署方案](#部署方案)
   * [一键部署（推荐）](#一键部署推荐)
@@ -43,6 +44,11 @@
     * [ ] Gin
     * [ ] Echo
     * [ ] Go-Zero
+    
+### 高级指令
+* 模型
+  * 获取当前会话模型：`/model`
+  * 设置当前会话模型【需管理员】：`/model <model>`，例如设置 GPT-4 `/model gpt-4`
 
 ## 项目特点
 * 基于 [OpenAI GPT3](https://platform.openai.com/account/api-keys) 接口，使用 [ChatGPT Client](https://github.com/go-zoox/chatgpt-client)
