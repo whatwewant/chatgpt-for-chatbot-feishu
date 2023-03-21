@@ -4,8 +4,8 @@ go 1.20
 
 require (
 	github.com/go-zoox/chalk v1.0.2
-	github.com/go-zoox/chatbot-feishu v1.2.7
-	github.com/go-zoox/chatgpt-client v1.4.2
+	github.com/go-zoox/chatbot-feishu v1.2.8
+	github.com/go-zoox/chatgpt-client v1.4.3
 	github.com/go-zoox/cli v1.2.0
 	github.com/go-zoox/core-utils v1.2.7
 	github.com/go-zoox/feishu v1.3.10
@@ -72,11 +72,11 @@ require (
 
 // replace github.com/go-zoox/chatbot-feishu => ../chatbot-feishu
 
+// replace github.com/go-zoox/chatgpt-client => ../chatgpt-client
+
 // replace github.com/go-zoox/feishu => ../feishu
 
 // replace github.com/go-zoox/logger => ../logger
-
-// replace github.com/go-zoox/chatgpt-client => ../chatgpt-client
 
 // replace github.com/go-zoox/openai-client => ../openai-client
 
