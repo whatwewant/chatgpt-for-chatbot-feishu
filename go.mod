@@ -5,13 +5,13 @@ go 1.20
 require (
 	github.com/go-zoox/chalk v1.0.2
 	github.com/go-zoox/chatbot-feishu v1.2.9
-	github.com/go-zoox/chatgpt-client v1.4.3
+	github.com/go-zoox/chatgpt-client v1.4.4
 	github.com/go-zoox/cli v1.2.0
 	github.com/go-zoox/core-utils v1.2.7
 	github.com/go-zoox/feishu v1.3.11
 	github.com/go-zoox/fs v1.3.9
 	github.com/go-zoox/logger v1.4.4
-	github.com/go-zoox/openai-client v1.3.0
+	github.com/go-zoox/openai-client v1.3.1
 	github.com/go-zoox/proxy v1.3.6
 	github.com/go-zoox/retry v1.0.3
 	github.com/go-zoox/zoox v1.8.9
