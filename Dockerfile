@@ -11,7 +11,8 @@ RUN go mod download
 
 COPY . .
 
-RUN GOOS=linux \
+RUN CGO_ENABLED=0 \
+  GOOS=linux \
   GOARCH=amd64 \
   go build \
   -trimpath \
@@ -19,8 +20,8 @@ RUN GOOS=linux \
   -v -o chatgpt-for-chatbot-feishu
 
 # Server
-# FROM whatwewant/go:v1.20-1
-FROM whatwewant/zmicro:v1
+FROM whatwewant/go:v1.20-1
+# FROM whatwewant/zmicro:v1
 
 LABEL MAINTAINER="Zero<tobewhatwewant@gmail.com>"
 
