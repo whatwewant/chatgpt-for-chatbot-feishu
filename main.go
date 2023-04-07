@@ -29,6 +29,12 @@ func main() {
 				EnvVars:  []string{"OPENAI_API_KEY"},
 				Required: true,
 			},
+			&cli.Int64Flag{
+				Name:    "openai-api-timeout",
+				Usage:   "OpenAI API Timeout, unit: second, default: 300",
+				EnvVars: []string{"OPENAI_API_TIMEOUT"},
+				Value:   300,
+			},
 			&cli.StringFlag{
 				Name:    "openai-api-server",
 				Usage:   "OpenAI API Server",
@@ -132,6 +138,7 @@ func main() {
 			Port:                 ctx.Int64("port"),
 			APIPath:              ctx.String("api-path"),
 			OpenAIAPIKey:         ctx.String("openai-api-key"),
+			OpenAIAPITimeout:     ctx.Int64("openai-api-timeout"),
 			AppID:                ctx.String("app-id"),
 			AppSecret:            ctx.String("app-secret"),
 			EncryptKey:           ctx.String("encrypt-key"),

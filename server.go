@@ -31,6 +31,7 @@ type FeishuBotConfig struct {
 	Port              int64
 	APIPath           string
 	OpenAIAPIKey      string
+	OpenAIAPITimeout  int64
 	AppID             string
 	AppSecret         string
 	EncryptKey        string
@@ -96,6 +97,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		ConversationLanguage: cfg.ConversationLanguage,
 		ChatGPTName:          cfg.BotName,
 		Proxy:                cfg.Proxy,
+		Timeout:              time.Duration(cfg.OpenAIAPITimeout) * time.Second,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to create chatgpt client: %v", err)
