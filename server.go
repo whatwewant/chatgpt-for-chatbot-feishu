@@ -8,6 +8,7 @@ import (
 	"github.com/go-zoox/chatbot-feishu"
 	"github.com/go-zoox/core-utils/regexp"
 	"github.com/go-zoox/core-utils/strings"
+	"github.com/go-zoox/debug"
 	openaiclient "github.com/go-zoox/openai-client"
 	"github.com/go-zoox/proxy"
 	"github.com/go-zoox/proxy/utils/rewriter"
@@ -371,7 +372,10 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		}
 
 		go func() {
-			logger.Infof("%s 问 ChatGPT：%s", user.User.Name, question)
+			if debug.IsDebugMode() {
+				logger.Infof("%s 问 ChatGPT：%s", user.User.Name, question)
+			}
+
 			var err error
 
 			conversation, err := client.GetOrCreateConversation(request.ChatID(), &chatgpt.ConversationConfig{
@@ -420,7 +424,10 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 				return
 			}
 
-			logger.Infof("ChatGPT 答 %s：%s", user.User.Name, answer)
+			if debug.IsDebugMode() {
+				logger.Infof("ChatGPT 答 %s：%s", user.User.Name, answer)
+			}
+
 			responseMessage := string(answer)
 			// if request.IsGroupChat() {
 			// 	responseMessage = fmt.Sprintf("%s\n-------------\n%s", question, answer)
