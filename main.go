@@ -129,6 +129,16 @@ func main() {
 				Usage:   "Sets the proxy tokens for OpenAI API",
 				EnvVars: []string{"PROXY_OPENAI_API_TOKEN"},
 			},
+			&cli.StringFlag{
+				Name:    "custom-command",
+				Usage:   "Custom command, such as: doc => trigger /doc",
+				EnvVars: []string{"CUSTOM_COMMAND"},
+			},
+			&cli.StringFlag{
+				Name:    "custom-command-service",
+				Usage:   "Custom command service, such as: https://example.com/api/doc",
+				EnvVars: []string{"CUSTOM_COMMAND_SERVICE"},
+			},
 		},
 	})
 
@@ -156,6 +166,8 @@ func main() {
 			OpenAIAPIServer:      ctx.String("openai-api-server"),
 			ProxyOpenAIAPIPath:   ctx.String("proxy-openai-api-path"),
 			ProxyOpenAIAPIToken:  ctx.String("proxy-openai-api-token"),
+			CustomCommand:        ctx.String("custom-command"),
+			CustomCommandService: ctx.String("custom-command-service"),
 		})
 	})
 
