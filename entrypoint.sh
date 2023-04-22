@@ -76,45 +76,9 @@ runtunnel() {
     log::info "[$(timestamp)] ngrok url: $(color::green $url)"
 
     export SITE_URL=$url
-  elif [ "$TUNNEL_TYPE" = "cpolar" ]; then
-    if [ -n "$tunnel_subdomain" ] && [ -z "$tunnel_auth_token" ]; then
-      log::error "[$(timestamp)] tunnel_auth_token is required when use tunnel_subdomain"
-      return 1
-    fi
-
-    if [ -n "$tunnel_auth_token" ]; then
-      zmicro cpolar authtoken $tunnel_auth_token >>/dev/null
-    fi
-
-    if [ -n "$tunnel_subdomain" ]; then
-      zmicro cpolar http --subdomain "$tunnel_subdomain" ${PORT} --log $tunnel_log >>$tunnel_log 2>&1 &
-    else
-      zmicro cpolar http ${PORT} --log $tunnel_log >>$tunnel_log 2>&1 &
-    fi
-
-    log::info "[$(timestamp)] starting cpolar ..."
-    # sleep 3
-
-    local cpolar_url=""
-    while [ -z "$cpolar_url" ]; do
-      sleep 1
-
-      log::info "[$(timestamp)] checking whether cpolar connected ..."
-      cpolar_url=$(cat $tunnel_log | grep "established" | grep "https" | awk -F 'at ' '{print $2}' | awk -F '"' '{print $1}')
-      if [ -n "$cpolar_url" ]; then
-        break
-      fi
-
-      if [ "$DEBUG" = "true" ]; then
-        log::info "[$(timestamp)] show cpolar connection info start ..."
-        cat $tunnel_log
-        log::info "[$(timestamp)] show cpolar connection info end ..."
-      fi
-    done
-
-    log::info "[$(timestamp)] cpolar url: $(color::green $cpolar_url)"
-
-    export SITE_URL=$cpolar_url
+  else
+    log::error "[$(timestamp)] unsupport TUNNEL_TYPE: $TUNNEL_TYPE"
+    return 1
   fi
 }
 
