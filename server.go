@@ -8,6 +8,7 @@ import (
 	"github.com/go-zoox/chatbot-feishu"
 	"github.com/go-zoox/core-utils/regexp"
 	"github.com/go-zoox/core-utils/strings"
+	"github.com/go-zoox/fetch"
 	openaiclient "github.com/go-zoox/openai-client"
 	"github.com/go-zoox/proxy"
 	"github.com/go-zoox/proxy/utils/rewriter"
@@ -70,6 +71,10 @@ type FeishuBotConfig struct {
 	ProxyOpenAIAPIPath string
 	// ProxyOpenAIAPIToken limits auth  with Bearer Token
 	ProxyOpenAIAPIToken string
+
+	// Custom Command with Service
+	CustomCommand        string
+	CustomCommandService string
 }
 
 func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
@@ -316,6 +321,54 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 			return nil
 		},
 	})
+
+	if cfg.CustomCommand != "" && cfg.CustomCommandService != "" {
+		feishuchatbot.OnCommand(cfg.CustomCommand, &chatbot.Command{
+			ArgsLength: 1,
+			Handler: func(args []string, request *feishuEvent.EventRequest, reply chatbot.MessageReply) error {
+				if len(args) != 1 {
+					return fmt.Errorf("invalid args: %v", args)
+				}
+
+				question := args[0]
+				logger.Debugf("[custom command: %s, service: %s] question: %s", cfg.CustomCommand, cfg.CustomCommandService, question)
+
+				response, err := fetch.Post(cfg.CustomCommandService, &fetch.Config{
+					Headers: fetch.Headers{
+						"Content-Type": "application/json",
+						"Accept":       "application/json",
+						"User-Agent":   fmt.Sprintf("go-zoox_fetch/%s chatgpt-for-chatbot-feishu/%s", fetch.Version, Version),
+					},
+					Body: map[string]interface{}{
+						"question": args[0],
+					},
+				})
+				if err != nil {
+					return fmt.Errorf("failed to request from custom command service(%s): %v", cfg.CustomCommandService, err)
+				}
+
+				if response.Status != http.StatusOK {
+					return fmt.Errorf("failed to request from custom command service(%s): %s", cfg.CustomCommandService, response.Status)
+				}
+
+				answer := response.Get("answer").String()
+				if answer == "" {
+					logger.Error("failed to request from custom command service(%s): empty answer (response: %s)", cfg.CustomCommandService, response.String())
+					if err := replyText(reply, fmt.Sprintf("no answer found, unexpected response from custom command service(response: %s)", response.String())); err != nil {
+						return fmt.Errorf("failed to reply: %v", err)
+					}
+
+					return nil
+				}
+
+				if err := replyText(reply, answer); err != nil {
+					return fmt.Errorf("failed to reply: %v", err)
+				}
+
+				return nil
+			},
+		})
+	}
 
 	feishuchatbot.OnMessage(func(text string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
 		// fmt.PrintJSON(request)
