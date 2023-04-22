@@ -344,11 +344,21 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 					},
 				})
 				if err != nil {
-					return fmt.Errorf("failed to request from custom command service(%s): %v", cfg.CustomCommandService, err)
+					logger.Errorf("failed to request from custom command service(%s)(1): %v", cfg.CustomCommandService, err)
+					if err2 := replyText(reply, fmt.Sprintf("failed to interact with command service(err: %v)", err)); err2 != nil {
+						return fmt.Errorf("failed to reply: %v", err)
+					}
+
+					return nil
 				}
 
 				if response.Status != http.StatusOK {
-					return fmt.Errorf("failed to request from custom command service(%s): %s", cfg.CustomCommandService, response.Status)
+					logger.Errorf("failed to request from custom command service(%s)(2): %d", cfg.CustomCommandService, response.Status)
+					if err := replyText(reply, fmt.Sprintf("failed to interact with command service (status: %d, response: %s)", response.Status, response.String())); err != nil {
+						return fmt.Errorf("failed to reply: %v", err)
+					}
+
+					return nil
 				}
 
 				answer := response.Get("answer").String()
