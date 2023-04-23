@@ -101,7 +101,7 @@ func main() {
 			&cli.StringFlag{
 				Name:    "logs-level",
 				Usage:   "The logs level",
-				EnvVars: []string{"LOGS_LEVEL"},
+				EnvVars: []string{"LOGS_LEVEL", "LOG_LEVEL"},
 				Value:   "INFO",
 			},
 			&cli.StringFlag{
