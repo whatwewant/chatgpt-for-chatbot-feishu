@@ -12,6 +12,7 @@ import (
 
 type Logs struct {
 	Dir string
+	Level string
 
 	//
 	accessLogFile *os.File
@@ -57,5 +58,7 @@ func (l *Logs) Setup() (err error) {
 		}),
 	})
 
+	logger.SetLevel(l.Level)
+	
 	return nil
 }

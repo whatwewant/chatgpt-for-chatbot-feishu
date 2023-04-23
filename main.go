@@ -99,6 +99,12 @@ func main() {
 				Value:   "/tmp/chatgpt-for-chatbot-feishu",
 			},
 			&cli.StringFlag{
+				Name:    "logs-level",
+				Usage:   "The logs level",
+				EnvVars: []string{"LOGS_LEVEL"},
+				Value:   "INFO",
+			},
+			&cli.StringFlag{
 				Name:    "offline-message",
 				Usage:   "The message to use for offline status",
 				EnvVars: []string{"OFFLINE_MESSAGE"},
@@ -145,6 +151,7 @@ func main() {
 	app.Command(func(ctx *cli.Context) (err error) {
 		return ServeFeishuBot(&FeishuBotConfig{
 			LogsDir:              ctx.String("logs-dir"),
+			LogsLevel:            ctx.String("logs-level"),
 			Port:                 ctx.Int64("port"),
 			APIPath:              ctx.String("api-path"),
 			OpenAIAPIKey:         ctx.String("openai-api-key"),

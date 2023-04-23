@@ -50,6 +50,7 @@ type FeishuBotConfig struct {
 	ConversationLanguage string
 	//
 	LogsDir string
+	LogsLevel string
 	//
 	OfflineMessage string
 	//
@@ -90,6 +91,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 
 	logs := &Logs{
 		Dir: cfg.LogsDir,
+		Level: cfg.LogsLevel,
 	}
 	if err := logs.Setup(); err != nil {
 		return fmt.Errorf("failed to setup logs: %v", err)
