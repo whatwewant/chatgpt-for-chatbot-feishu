@@ -38,7 +38,7 @@ func main() {
 			&cli.StringFlag{
 				Name:    "openai-api-server",
 				Usage:   "OpenAI API Server",
-				EnvVars: []string{"OPENAI_API_Server"},
+				EnvVars: []string{"OPENAI_API_SERVER"},
 			},
 			&cli.StringFlag{
 				Name:     "app-id",
