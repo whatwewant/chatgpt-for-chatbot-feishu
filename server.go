@@ -49,7 +49,7 @@ type FeishuBotConfig struct {
 	ConversationContext  string
 	ConversationLanguage string
 	//
-	LogsDir string
+	LogsDir   string
 	LogsLevel string
 	//
 	OfflineMessage string
@@ -90,7 +90,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 	logger.Infof("###### Settings END #######")
 
 	logs := &Logs{
-		Dir: cfg.LogsDir,
+		Dir:   cfg.LogsDir,
 		Level: cfg.LogsLevel,
 	}
 	if err := logs.Setup(); err != nil {
@@ -562,17 +562,18 @@ func run(
 		app.Group(ProxyOpenAIAPIPath, func(group *zoox.RouterGroup) {
 			group.Use(middleware.BearerToken(strings.Split(ProxyOpenAIAPIToken, ",")))
 
-			group.Proxy("/", OpenAIAPIServer, &proxy.SingleTargetConfig{
-				RequestHeaders: http.Header{
+			group.Proxy("/", OpenAIAPIServer, func(cfg *proxy.SingleTargetConfig) {
+				cfg.RequestHeaders = http.Header{
 					"Authorization": []string{fmt.Sprintf("Bearer %s", OpenAIAPIKey)},
 					"User-Agent":    []string{fmt.Sprintf("GoZoox/ChatGPT-for-ChatBot-Feishu@%s", Version)},
-				},
-				Rewrites: rewriter.Rewriters{
+				}
+
+				cfg.Rewrites = rewriter.Rewriters{
 					{
 						From: fmt.Sprintf("^%s/(.*)$", ProxyOpenAIAPIPath),
 						To:   "/$1",
 					},
-				},
+				}
 			})
 		})
 	}
