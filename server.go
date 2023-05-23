@@ -66,7 +66,10 @@ type FeishuBotConfig struct {
 	//   socks5://127.0.0.1:17890
 	Proxy string
 
-	OpenAIAPIServer string
+	OpenAIAPIServer       string
+	OpenAIAPIType         string
+	OpenAIAPIVersion      string
+	OpenAIAzureDeployment string
 
 	// ProxyOpenAIAPIPath proxys the OpenAPI API (https://api.openai.com)
 	ProxyOpenAIAPIPath string
@@ -100,6 +103,9 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 	client, err := chatgpt.New(&chatgpt.Config{
 		APIKey:               cfg.OpenAIAPIKey,
 		APIServer:            cfg.OpenAIAPIServer,
+		APIType:              cfg.OpenAIAPIType,
+		APIVersion:           cfg.OpenAIAPIVersion,
+		AzureDeployment:      cfg.OpenAIAzureDeployment,
 		ConversationContext:  cfg.ConversationContext,
 		ConversationLanguage: cfg.ConversationLanguage,
 		ChatGPTName:          cfg.BotName,
