@@ -46,14 +46,19 @@ func main() {
 				EnvVars: []string{"OPENAI_API_TYPE"},
 			},
 			&cli.StringFlag{
-				Name:    "openai-api-version",
-				Usage:   "OpenAI API Version or Azure OpenAI Service API Version",
-				EnvVars: []string{"OPENAI_API_VERSION"},
+				Name:    "openai-azure-resource",
+				Usage:   "Azure OpenAI Service Resource",
+				EnvVars: []string{"OPENAI_AZURE_RESOURCE"},
 			},
 			&cli.StringFlag{
 				Name:    "openai-azure-deployment",
 				Usage:   "Azure OpenAI Service Deployment",
 				EnvVars: []string{"OPENAI_AZURE_DEPLOYMENT"},
+			},
+			&cli.StringFlag{
+				Name:    "openai-azure-api-version",
+				Usage:   "Azure OpenAI Service API Version",
+				EnvVars: []string{"OPENAI_AZURE_API_VERSION"},
 			},
 			&cli.StringFlag{
 				Name:     "app-id",
@@ -187,8 +192,9 @@ func main() {
 			Proxy:                 ctx.String("proxy"),
 			OpenAIAPIServer:       ctx.String("openai-api-server"),
 			OpenAIAPIType:         ctx.String("openai-api-type"),
-			OpenAIAPIVersion:      ctx.String("openai-api-version"),
+			OpenAIAzureResource:   ctx.String("openai-azure-resource"),
 			OpenAIAzureDeployment: ctx.String("openai-azure-deployment"),
+			OpenAIAzureAPIVersion: ctx.String("openai-azure-api-version"),
 			ProxyOpenAIAPIPath:    ctx.String("proxy-openai-api-path"),
 			ProxyOpenAIAPIToken:   ctx.String("proxy-openai-api-token"),
 			CustomCommand:         ctx.String("custom-command"),
