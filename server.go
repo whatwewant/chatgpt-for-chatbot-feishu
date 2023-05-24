@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/go-zoox/chalk"
@@ -537,6 +538,10 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		cfg.APIPath,
 		cfg.OpenAIAPIKey,
 		cfg.OpenAIAPIServer,
+		cfg.OpenAIAPIType,
+		cfg.OpenAIAzureResource,
+		cfg.OpenAIAzureDeployment,
+		cfg.OpenAIAzureAPIVersion,
 		cfg.ProxyOpenAIAPIPath,
 		cfg.ProxyOpenAIAPIToken,
 	)
@@ -545,10 +550,14 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 func run(
 	chatbot chatbot.ChatBot,
 	port int64,
-	path string,
-	OpenAIAPIKey string,
-	OpenAIAPIServer string,
-	ProxyOpenAIAPIPath string,
+	path,
+	OpenAIAPIKey,
+	OpenAIAPIServer,
+	OpenAIAPIType,
+	OpenAIAzureResource,
+	OpenAIAzureDeployment,
+	OpenAIAzureAPIVersion,
+	ProxyOpenAIAPIPath,
 	ProxyOpenAIAPIToken string,
 ) error {
 	if OpenAIAPIServer == "" {
@@ -571,19 +580,43 @@ func run(
 		app.Group(ProxyOpenAIAPIPath, func(group *zoox.RouterGroup) {
 			group.Use(middleware.BearerToken(strings.Split(ProxyOpenAIAPIToken, ",")))
 
-			group.Proxy("/", OpenAIAPIServer, func(cfg *proxy.SingleTargetConfig) {
-				cfg.RequestHeaders = http.Header{
-					"Authorization": []string{fmt.Sprintf("Bearer %s", OpenAIAPIKey)},
-					"User-Agent":    []string{fmt.Sprintf("GoZoox/ChatGPT-for-ChatBot-Feishu@%s", Version)},
-				}
+			switch OpenAIAPIType {
+			case "azure":
+				target := fmt.Sprintf("https://%s.openai.azure.com", OpenAIAzureResource)
 
-				cfg.Rewrites = rewriter.Rewriters{
-					{
-						From: fmt.Sprintf("^%s/(.*)$", ProxyOpenAIAPIPath),
-						To:   "/$1",
-					},
-				}
-			})
+				group.Proxy("/*", target, func(cfg *proxy.SingleTargetConfig) {
+					cfg.RequestHeaders = http.Header{
+						"User-Agent": []string{fmt.Sprintf("GoZoox/ChatGPT-for-ChatBot-Feishu@%s", Version)},
+						"api-key":    []string{OpenAIAPIKey},
+					}
+
+					cfg.Rewrites = rewriter.Rewriters{
+						{
+							From: fmt.Sprintf("^%s/(.*)$", ProxyOpenAIAPIPath),
+							To:   fmt.Sprintf("/openai/deployments/%s/$1", OpenAIAzureDeployment),
+						},
+					}
+
+					cfg.Query = url.Values{
+						"api-version": []string{OpenAIAzureAPIVersion},
+					}
+				})
+			default:
+				group.Proxy("/", OpenAIAPIServer, func(cfg *proxy.SingleTargetConfig) {
+					cfg.RequestHeaders = http.Header{
+						"User-Agent":    []string{fmt.Sprintf("GoZoox/ChatGPT-for-ChatBot-Feishu@%s", Version)},
+						"Authorization": []string{fmt.Sprintf("Bearer %s", OpenAIAPIKey)},
+					}
+
+					cfg.Rewrites = rewriter.Rewriters{
+						{
+							From: fmt.Sprintf("^%s/(.*)$", ProxyOpenAIAPIPath),
+							To:   "/v1/$1",
+						},
+					}
+				})
+			}
+
 		})
 	}
 
