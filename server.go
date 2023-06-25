@@ -334,6 +334,24 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		},
 	})
 
+	feishuchatbot.OnCommand("reset", &chatbot.Command{
+		Handler: func(args []string, request *feishuEvent.EventRequest, reply chatbot.MessageReply) error {
+			if err := isAllowToDo(request, "reset"); err != nil {
+				return err
+			}
+
+			if err := client.ResetConversation(request.ChatID()); err != nil {
+				return fmt.Errorf("failed to reset conversation(%s)", request.ChatID())
+			}
+
+			if err := replyText(reply, "succeed to reset"); err != nil {
+				return fmt.Errorf("failed to reply: %v", err)
+			}
+
+			return nil
+		},
+	})
+
 	if cfg.CustomCommand != "" && cfg.CustomCommandService != "" {
 		feishuchatbot.OnCommand(cfg.CustomCommand, &chatbot.Command{
 			ArgsLength: 1,
