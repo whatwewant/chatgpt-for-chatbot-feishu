@@ -89,6 +89,10 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		cfg.OfflineMessage = "robot is offline"
 	}
 
+	if cfg.OpenAIModel == "" {
+		cfg.OpenAIModel = openaiclient.ModelGPT_4
+	}
+
 	logger.Infof("###### Settings START #######")
 	logger.Infof("Serve Version: %s", Version)
 	logger.Infof("Serve at PORT: %d", cfg.Port)
