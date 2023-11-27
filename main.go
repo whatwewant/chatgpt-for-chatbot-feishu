@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/go-zoox/chatgpt-for-chatbot-feishu/config"
 	"github.com/go-zoox/cli"
 )
 
@@ -24,10 +25,10 @@ func main() {
 				Value:   "/",
 			},
 			&cli.StringFlag{
-				Name:     "openai-api-key",
-				Usage:    "OpenAI API Key",
-				EnvVars:  []string{"OPENAI_API_KEY"},
-				Required: true,
+				Name:    "openai-api-key",
+				Usage:   "OpenAI API Key",
+				EnvVars: []string{"OPENAI_API_KEY"},
+				// Required: true,
 			},
 			&cli.Int64Flag{
 				Name:    "openai-api-timeout",
@@ -146,16 +147,6 @@ func main() {
 				EnvVars: []string{"PROXY", "HTTPS_PROXY"},
 			},
 			&cli.StringFlag{
-				Name:    "proxy-openai-api-path",
-				Usage:   "Sets the proxy path for OpenAI API",
-				EnvVars: []string{"PROXY_OPENAI_API_PATH"},
-			},
-			&cli.StringFlag{
-				Name:    "proxy-openai-api-token",
-				Usage:   "Sets the proxy tokens for OpenAI API",
-				EnvVars: []string{"PROXY_OPENAI_API_TOKEN"},
-			},
-			&cli.StringFlag{
 				Name:    "custom-command",
 				Usage:   "Custom command, such as: doc => trigger /doc",
 				EnvVars: []string{"CUSTOM_COMMAND"},
@@ -169,7 +160,7 @@ func main() {
 	})
 
 	app.Command(func(ctx *cli.Context) (err error) {
-		return ServeFeishuBot(&FeishuBotConfig{
+		return ServeFeishuBot(&config.Config{
 			LogsDir:               ctx.String("logs-dir"),
 			LogsLevel:             ctx.String("logs-level"),
 			Port:                  ctx.Int64("port"),
@@ -195,8 +186,6 @@ func main() {
 			OpenAIAzureResource:   ctx.String("openai-azure-resource"),
 			OpenAIAzureDeployment: ctx.String("openai-azure-deployment"),
 			OpenAIAzureAPIVersion: ctx.String("openai-azure-api-version"),
-			ProxyOpenAIAPIPath:    ctx.String("proxy-openai-api-path"),
-			ProxyOpenAIAPIToken:   ctx.String("proxy-openai-api-token"),
 			CustomCommand:         ctx.String("custom-command"),
 			CustomCommandService:  ctx.String("custom-command-service"),
 		})
