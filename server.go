@@ -1,90 +1,25 @@
 package main
 
 import (
-	"net/http"
-	"net/url"
 	"time"
 
 	"github.com/go-zoox/chalk"
 	"github.com/go-zoox/chatbot-feishu"
-	"github.com/go-zoox/core-utils/regexp"
-	"github.com/go-zoox/core-utils/strings"
-	"github.com/go-zoox/fetch"
+	"github.com/go-zoox/chatgpt-for-chatbot-feishu/commands"
+	"github.com/go-zoox/chatgpt-for-chatbot-feishu/config"
 	openaiclient "github.com/go-zoox/openai-client"
-	"github.com/go-zoox/proxy"
-	"github.com/go-zoox/proxy/utils/rewriter"
 	"github.com/go-zoox/zoox"
 	"github.com/go-zoox/zoox/defaults"
-	"github.com/go-zoox/zoox/middleware"
 
 	"github.com/go-zoox/core-utils/fmt"
 	"github.com/go-zoox/feishu"
-	"github.com/go-zoox/feishu/contact/user"
-	mc "github.com/go-zoox/feishu/message/content"
 
 	chatgpt "github.com/go-zoox/chatgpt-client"
-	feishuBot "github.com/go-zoox/feishu/bot"
 	feishuEvent "github.com/go-zoox/feishu/event"
 	"github.com/go-zoox/logger"
-	"github.com/go-zoox/retry"
 )
 
-type FeishuBotConfig struct {
-	Port              int64
-	APIPath           string
-	OpenAIAPIKey      string
-	OpenAIAPITimeout  int64
-	AppID             string
-	AppSecret         string
-	EncryptKey        string
-	VerificationToken string
-	//
-	ReportURL string
-	//
-	SiteURL string
-	//
-	OpenAIModel string
-	//
-	FeishuBaseURI string
-	//
-	ConversationContext  string
-	ConversationLanguage string
-	//
-	LogsDir   string
-	LogsLevel string
-	//
-	OfflineMessage string
-	//
-	AdminEmail string
-	//
-	BotName string
-
-	// Proxy sets the request proxy.
-	// support http, https, socks5
-	// example:
-	//   http://127.0.0.1:17890
-	//   https://127.0.0.1:17890
-	//   socks5://127.0.0.1:17890
-	Proxy string
-
-	OpenAIAPIServer string
-
-	OpenAIAPIType         string
-	OpenAIAzureResource   string
-	OpenAIAzureDeployment string
-	OpenAIAzureAPIVersion string
-
-	// ProxyOpenAIAPIPath proxys the OpenAPI API (https://api.openai.com)
-	ProxyOpenAIAPIPath string
-	// ProxyOpenAIAPIToken limits auth  with Bearer Token
-	ProxyOpenAIAPIToken string
-
-	// Custom Command with Service
-	CustomCommand        string
-	CustomCommandService string
-}
-
-func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
+func ServeFeishuBot(cfg *config.Config) (err error) {
 	if cfg.OfflineMessage == "" {
 		cfg.OfflineMessage = "robot is offline"
 	}
@@ -107,7 +42,7 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		return fmt.Errorf("failed to setup logs: %v", err)
 	}
 
-	client, err := chatgpt.New(&chatgpt.Config{
+	chatgptClient, err := chatgpt.New(&chatgpt.Config{
 		APIKey:               cfg.OpenAIAPIKey,
 		APIServer:            cfg.OpenAIAPIServer,
 		APIType:              cfg.OpenAIAPIType,
@@ -124,77 +59,32 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		return fmt.Errorf("failed to create chatgpt client: %v", err)
 	}
 
-	bot := feishu.New(&feishu.Config{
+	feishuClient := feishu.New(&feishu.Config{
 		AppID:     cfg.AppID,
 		AppSecret: cfg.AppSecret,
 		BaseURI:   cfg.FeishuBaseURI,
 	})
-	var botInfo *feishuBot.GetBotInfoResponse
 
-	isInService := true
+	cfg.Version = Version
+	cfg.IsInService = true
 
 	tryToGetBotInfo := func() {
 		for {
-			if botInfo != nil {
+			if cfg.BotInfo != nil {
 				break
 			}
 
 			logger.Infof("Trying to get bot info ...")
-			botInfo, err = bot.Bot().GetBotInfo()
+			cfg.BotInfo, err = feishuClient.Bot().GetBotInfo()
 			if err != nil {
 				logger.Errorf("failed to get bot info: %v", err)
 				return
 			}
 
-			logger.Infof("Bot Name: %s", botInfo.AppName)
+			logger.Infof("Bot Name: %s", cfg.BotInfo.AppName)
 			logger.Infof("Feishu Bot Online ...")
 			time.Sleep(3 * time.Second)
 		}
-	}
-
-	isAllowToDo := func(request *feishuEvent.EventRequest, command string) (reason error) {
-		if cfg.AdminEmail != "" {
-			eventSender, err := bot.Contact().User().Retrieve(&user.RetrieveRequest{
-				UserIDType: "open_id",
-				UserID:     request.Sender().SenderID.OpenID,
-			})
-			if err != nil {
-				return fmt.Errorf("failed to retrieve user with openid(%s): %v", request.Sender().SenderID.OpenID, err)
-			}
-
-			if eventSender.User.EnterpriseEmail != cfg.AdminEmail && eventSender.User.Email != cfg.AdminEmail {
-				return fmt.Errorf("user(%s) is not allow to do action: %s", eventSender.User.Name, command)
-			}
-
-			return nil
-		}
-
-		return fmt.Errorf("admin email is not set, not allow to do action: %s", command)
-	}
-
-	getUser := func(request *feishuEvent.EventRequest) (*user.RetrieveResponse, error) {
-		sender := request.Sender()
-
-		if cfg.AdminEmail != "" {
-			eventSender, err := bot.Contact().User().Retrieve(&user.RetrieveRequest{
-				UserIDType: "open_id",
-				UserID:     sender.SenderID.OpenID,
-			})
-			if err != nil {
-				return nil, fmt.Errorf("failed to retrieve user with openid(%s): %v", sender.SenderID.OpenID, err)
-			}
-
-			return eventSender, nil
-		}
-
-		return &user.RetrieveResponse{
-			User: user.UserEntity{
-				Name:    sender.SenderID.UserID,
-				OpenID:  sender.SenderID.OpenID,
-				UnionID: sender.SenderID.UnionID,
-				UserID:  sender.SenderID.UserID,
-			},
-		}, nil
 	}
 
 	go func() {
@@ -226,330 +116,30 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		return fmt.Errorf("failed to create feishu chatbot: %v", err)
 	}
 
-	replyText := func(reply func(content string, msgType ...string) error, text string) error {
-		msgType, content, err := mc.
-			NewContent().
-			Post(&mc.ContentTypePost{
-				ZhCN: &mc.ContentTypePostBody{
-					Content: [][]mc.ContentTypePostBodyItem{
-						{
-							{
-								Tag:      "text",
-								UnEscape: true,
-								Text:     text,
-							},
-						},
-					},
-				},
-			}).
-			Build()
-		if err != nil {
-			return fmt.Errorf("failed to build content: %v", err)
-		}
-		if err := reply(string(content), msgType); err != nil {
-			return fmt.Errorf("failed to reply: %v", err)
-		}
+	feishuchatbot.OnCommand("ping", commands.CreatePingCommand(feishuClient, chatgptClient))
 
-		return nil
-	}
+	feishuchatbot.OnCommand("offline", commands.CreateOfflineCommand(feishuClient, chatgptClient, cfg))
 
-	feishuchatbot.OnCommand("ping", &chatbot.Command{
-		Handler: func(args []string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
-			if err := replyText(reply, "pong"); err != nil {
-				return fmt.Errorf("failed to reply: %v", err)
-			}
+	feishuchatbot.OnCommand("online", commands.CreateOnlineCommand(feishuClient, chatgptClient, cfg))
 
-			return nil
-		},
-	})
+	feishuchatbot.OnCommand("model", commands.CreateModelCommand(feishuClient, chatgptClient, cfg))
 
-	feishuchatbot.OnCommand("offline", &chatbot.Command{
-		Handler: func(args []string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
-			if err := isAllowToDo(request, "online"); err != nil {
-				return err
-			}
+	feishuchatbot.OnCommand("reset", commands.CreateResetCommand(feishuClient, chatgptClient, cfg))
 
-			isInService = false
+	feishuchatbot.OnCommand("message", commands.CreateMessageCommand(feishuClient, chatgptClient, cfg))
+	feishuchatbot.OnCommand("问答", commands.CreateMessageCommand(feishuClient, chatgptClient, cfg))
 
-			if err := replyText(reply, "succeed to offline"); err != nil {
-				return fmt.Errorf("failed to reply: %v", err)
-			}
-
-			return nil
-		},
-	})
-
-	feishuchatbot.OnCommand("online", &chatbot.Command{
-		Handler: func(args []string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
-			if err := isAllowToDo(request, "online"); err != nil {
-				return err
-			}
-
-			isInService = true
-
-			if err := replyText(reply, "succeed to online"); err != nil {
-				return fmt.Errorf("failed to reply: %v", err)
-			}
-
-			return nil
-		},
-	})
-
-	feishuchatbot.OnCommand("model", &chatbot.Command{
-		ArgsLength: 1,
-		Handler: func(args []string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
-			if err := isAllowToDo(request, "model"); err != nil {
-				return err
-			}
-
-			if len(args) == 0 || args[0] == "" {
-				currentModel, err := client.GetConversationModel(request.ChatID(), &chatgpt.ConversationConfig{
-					MaxMessages: 50,
-					Model:       cfg.OpenAIModel,
-				})
-				if err != nil {
-					return fmt.Errorf("failed to get model by conversation(%s)", request.ChatID())
-				}
-
-				if err := replyText(reply, fmt.Sprintf("当前模型：%s", currentModel)); err != nil {
-					return fmt.Errorf("failed to reply: %v", err)
-				}
-
-				return nil
-			}
-
-			model := args[0]
-			if model == "" {
-				return fmt.Errorf("model name is required (args: %s)", strings.Join(args, " "))
-			}
-
-			if err := client.ChangeConversationModel(request.ChatID(), model, &chatgpt.ConversationConfig{
-				MaxMessages: 50,
-				Model:       cfg.OpenAIModel,
-			}); err != nil {
-				return fmt.Errorf("failed to set model(%s) for conversation(%s)", model, request.ChatID())
-			}
-
-			if err := replyText(reply, fmt.Sprintf("succeed to set model: %s", model)); err != nil {
-				return fmt.Errorf("failed to reply: %v", err)
-			}
-
-			return nil
-		},
-	})
-
-	feishuchatbot.OnCommand("reset", &chatbot.Command{
-		Handler: func(args []string, request *feishuEvent.EventRequest, reply chatbot.MessageReply) error {
-			if err := isAllowToDo(request, "reset"); err != nil {
-				return err
-			}
-
-			if err := client.ResetConversation(request.ChatID()); err != nil {
-				return fmt.Errorf("failed to reset conversation(%s)", request.ChatID())
-			}
-
-			if err := replyText(reply, "succeed to reset"); err != nil {
-				return fmt.Errorf("failed to reply: %v", err)
-			}
-
-			return nil
-		},
-	})
+	feishuchatbot.OnCommand("draw", commands.CreateDrawCommand(feishuClient, chatgptClient))
+	feishuchatbot.OnCommand("画图", commands.CreateDrawCommand(feishuClient, chatgptClient))
 
 	if cfg.CustomCommand != "" && cfg.CustomCommandService != "" {
-		feishuchatbot.OnCommand(cfg.CustomCommand, &chatbot.Command{
-			ArgsLength: 1,
-			Handler: func(args []string, request *feishuEvent.EventRequest, reply chatbot.MessageReply) error {
-				if len(args) != 1 {
-					return fmt.Errorf("invalid args: %v", args)
-				}
-
-				question := args[0]
-				logger.Debugf("[custom command: %s, service: %s] question: %s", cfg.CustomCommand, cfg.CustomCommandService, question)
-
-				response, err := fetch.Post(cfg.CustomCommandService, &fetch.Config{
-					Headers: fetch.Headers{
-						"Content-Type": "application/json",
-						"Accept":       "application/json",
-						"User-Agent":   fmt.Sprintf("go-zoox_fetch/%s chatgpt-for-chatbot-feishu/%s", fetch.Version, Version),
-					},
-					Body: map[string]interface{}{
-						"question": args[0],
-					},
-				})
-				if err != nil {
-					logger.Errorf("failed to request from custom command service(%s)(1): %v", cfg.CustomCommandService, err)
-					if err2 := replyText(reply, fmt.Sprintf("failed to interact with command service(err: %v)", err)); err2 != nil {
-						return fmt.Errorf("failed to reply: %v", err)
-					}
-
-					return nil
-				}
-
-				if response.Status != http.StatusOK {
-					logger.Errorf("failed to request from custom command service(%s)(2): %d", cfg.CustomCommandService, response.Status)
-					if err := replyText(reply, fmt.Sprintf("failed to interact with command service (status: %d, response: %s)", response.Status, response.String())); err != nil {
-						return fmt.Errorf("failed to reply: %v", err)
-					}
-
-					return nil
-				}
-
-				answer := response.Get("answer").String()
-				if answer == "" {
-					logger.Error("failed to request from custom command service(%s): empty answer (response: %s)", cfg.CustomCommandService, response.String())
-					if err := replyText(reply, fmt.Sprintf("no answer found, unexpected response from custom command service(response: %s)", response.String())); err != nil {
-						return fmt.Errorf("failed to reply: %v", err)
-					}
-
-					return nil
-				}
-
-				if err := replyText(reply, answer); err != nil {
-					return fmt.Errorf("failed to reply: %v", err)
-				}
-
-				return nil
-			},
-		})
+		feishuchatbot.OnCommand(cfg.CustomCommand, commands.CreateCustomCommand(feishuClient, chatgptClient, cfg))
 	}
 
 	feishuchatbot.OnMessage(func(text string, request *feishuEvent.EventRequest, reply func(content string, msgType ...string) error) error {
-		// fmt.PrintJSON(request)
-		if botInfo == nil {
-			logger.Infof("Trying to get bot info ...")
-			botInfo, err = bot.Bot().GetBotInfo()
-			if err != nil {
-				return fmt.Errorf("failed to get bot info: %v", err)
-			}
-		}
-
-		user, err := getUser(request)
-		if err != nil {
-			return fmt.Errorf("failed to get user: %v", err)
-		}
-
-		textMessage := strings.TrimSpace(text)
-		if textMessage == "" {
-			return nil
-		}
-
-		var question string
-		// group chat
-		if request.IsGroupChat() {
-			// @
-			if ok := regexp.Match("^@_user_1", textMessage); ok {
-				for _, metion := range request.Event.Message.Mentions {
-					if metion.Key == "@_user_1" && metion.ID.OpenID == botInfo.OpenID {
-						question = textMessage[len("@_user_1"):]
-						question = strings.TrimSpace(question)
-						break
-					}
-				}
-			} else if ok := regexp.Match("^/chatgpt\\s+", textMessage); ok {
-				// command: /chatgpt
-				question = textMessage[len("/chatgpt "):]
-			}
-		} else if request.IsP2pChat() {
-			question = textMessage
-		}
-
-		question = strings.TrimSpace(question)
-		if question == "" {
-			logger.Infof("ignore empty question message")
-			return nil
-		}
-
-		// @TODO 离线服务
-		if !isInService {
-			return replyText(reply, cfg.OfflineMessage)
-		}
-
-		go func() {
-			logger.Debugf("%s 问 ChatGPT：%s", user.User.Name, question)
-
-			var err error
-
-			conversation, err := client.GetOrCreateConversation(request.ChatID(), &chatgpt.ConversationConfig{
-				MaxMessages: 50,
-				Model:       cfg.OpenAIModel,
-			})
-			if err != nil {
-				logger.Errorf("failed to get or create conversation by ChatID %s", request.ChatID())
-				return
-			}
-
-			if err := conversation.IsQuestionAsked(request.Event.Message.MessageID); err != nil {
-				logger.Warnf("duplicated event(id: %s): %v", request.Event.Message.MessageID, err)
-				return
-			}
-
-			var answer []byte
-			err = retry.Retry(func() error {
-
-				answer, err = conversation.Ask([]byte(question), &chatgpt.ConversationAskConfig{
-					ID:   request.Event.Message.MessageID,
-					User: user.User.Name,
-				})
-				if err != nil {
-					logger.Errorf("failed to request answer: %v", err)
-					return fmt.Errorf("failed to request answer: %v", err)
-				}
-
-				return nil
-			}, 5, 3*time.Second)
-			if err != nil {
-				logger.Errorf("failed to get answer: %v", err)
-				msgType, content, err := mc.
-					NewContent().
-					Text(&mc.ContentTypeText{
-						Text: "ChatGPT 繁忙，请稍后重试",
-					}).
-					Build()
-				if err != nil {
-					logger.Errorf("failed to build content: %v", err)
-					return
-				}
-				if err := reply(string(content), msgType); err != nil {
-					return
-				}
-				return
-			}
-
-			logger.Debugf("ChatGPT 答 %s：%s", user.User.Name, answer)
-
-			responseMessage := string(answer)
-			// if request.IsGroupChat() {
-			// 	responseMessage = fmt.Sprintf("%s\n-------------\n%s", question, answer)
-			// }
-
-			msgType, content, err := mc.
-				NewContent().
-				Post(&mc.ContentTypePost{
-					ZhCN: &mc.ContentTypePostBody{
-						Content: [][]mc.ContentTypePostBodyItem{
-							{
-								{
-									Tag:      "text",
-									UnEscape: true,
-									Text:     responseMessage,
-								},
-							},
-						},
-					},
-				}).
-				Build()
-			if err != nil {
-				logger.Errorf("failed to build content: %v", err)
-				return
-			}
-			if err := reply(string(content), msgType); err != nil {
-				logger.Errorf("failed to reply: %v", err)
-				return
-			}
-		}()
-
-		return nil
+		return commands.
+			CreateMessageCommand(feishuClient, chatgptClient, cfg).
+			Handler([]string{text}, request, reply)
 	})
 
 	// return feishuchatbot.Run()
@@ -564,8 +154,6 @@ func ServeFeishuBot(cfg *FeishuBotConfig) (err error) {
 		cfg.OpenAIAzureResource,
 		cfg.OpenAIAzureDeployment,
 		cfg.OpenAIAzureAPIVersion,
-		cfg.ProxyOpenAIAPIPath,
-		cfg.ProxyOpenAIAPIToken,
 	)
 }
 
@@ -578,9 +166,7 @@ func run(
 	OpenAIAPIType,
 	OpenAIAzureResource,
 	OpenAIAzureDeployment,
-	OpenAIAzureAPIVersion,
-	ProxyOpenAIAPIPath,
-	ProxyOpenAIAPIToken string,
+	OpenAIAzureAPIVersion string,
 ) error {
 	if OpenAIAPIServer == "" {
 		OpenAIAPIServer = openaiclient.DefaultAPIServer
@@ -593,54 +179,6 @@ func run(
 	app.Get(path, func(ctx *zoox.Context) {
 		ctx.String(200, "OK")
 	})
-
-	if ProxyOpenAIAPIPath != "" {
-		if ProxyOpenAIAPIToken == "" {
-			return fmt.Errorf("env ProxyOpenAIAPIToken is required when ProxyOpenAIAPIPath sets")
-		}
-
-		app.Group(ProxyOpenAIAPIPath, func(group *zoox.RouterGroup) {
-			group.Use(middleware.BearerToken(strings.Split(ProxyOpenAIAPIToken, ",")))
-
-			switch OpenAIAPIType {
-			case "azure":
-				target := fmt.Sprintf("https://%s.openai.azure.com", OpenAIAzureResource)
-
-				group.Proxy("/*", target, func(cfg *proxy.SingleTargetConfig) {
-					cfg.RequestHeaders = http.Header{
-						"User-Agent": []string{fmt.Sprintf("GoZoox/ChatGPT-for-ChatBot-Feishu@%s", Version)},
-						"api-key":    []string{OpenAIAPIKey},
-					}
-
-					cfg.Rewrites = rewriter.Rewriters{
-						{
-							From: fmt.Sprintf("^%s/(.*)$", ProxyOpenAIAPIPath),
-							To:   fmt.Sprintf("/openai/deployments/%s/$1", OpenAIAzureDeployment),
-						},
-					}
-
-					cfg.Query = url.Values{
-						"api-version": []string{OpenAIAzureAPIVersion},
-					}
-				})
-			default:
-				group.Proxy("/", OpenAIAPIServer, func(cfg *proxy.SingleTargetConfig) {
-					cfg.RequestHeaders = http.Header{
-						"User-Agent":    []string{fmt.Sprintf("GoZoox/ChatGPT-for-ChatBot-Feishu@%s", Version)},
-						"Authorization": []string{fmt.Sprintf("Bearer %s", OpenAIAPIKey)},
-					}
-
-					cfg.Rewrites = rewriter.Rewriters{
-						{
-							From: fmt.Sprintf("^%s/(.*)$", ProxyOpenAIAPIPath),
-							To:   "/v1/$1",
-						},
-					}
-				})
-			}
-
-		})
-	}
 
 	return app.Run(fmt.Sprintf(":%d", port))
 }
