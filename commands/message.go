@@ -84,6 +84,7 @@ func CreateMessageCommand(
 				conversation, err := chatgptClient.GetOrCreateConversation(request.ChatID(), &chatgpt.ConversationConfig{
 					MaxMessages: 50,
 					Model:       cfg.OpenAIModel,
+					Temperature: cfg.OpenAITemperature,
 				})
 				if err != nil {
 					logger.Errorf("failed to get or create conversation by ChatID %s", request.ChatID())

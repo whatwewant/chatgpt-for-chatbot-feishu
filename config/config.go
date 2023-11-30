@@ -18,7 +18,8 @@ type Config struct {
 	//
 	SiteURL string
 	//
-	OpenAIModel string
+	OpenAIModel       string
+	OpenAITemperature float64
 	//
 	FeishuBaseURI string
 	//

@@ -24,7 +24,7 @@ func CreateModelCommand(
 
 			if len(args) == 0 || args[0] == "" {
 				currentModel, err := chatgptClient.GetConversationModel(request.ChatID(), &chatgpt.ConversationConfig{
-					MaxMessages: 50,
+					MaxMessages: 100,
 					Model:       cfg.OpenAIModel,
 				})
 				if err != nil {

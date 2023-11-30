@@ -98,6 +98,12 @@ func main() {
 				Usage:   "Custom open ai model",
 				EnvVars: []string{"OPENAI_MODEL"},
 			},
+			&cli.Float64Flag{
+				Name:    "openai-temperature",
+				Usage:   "Custom open ai temperature",
+				EnvVars: []string{"OPENAI_TEMPERATURE"},
+				Value:   0.3,
+			},
 			&cli.StringFlag{
 				Name:    "feishu-base-uri",
 				Usage:   "Custom feishu base uri for selfhosted Feishu",
@@ -174,6 +180,7 @@ func main() {
 			ReportURL:             ctx.String("report-url"),
 			SiteURL:               ctx.String("site-url"),
 			OpenAIModel:           ctx.String("openai-model"),
+			OpenAITemperature:     ctx.Float64("openai-temperature"),
 			FeishuBaseURI:         ctx.String("feishu-base-uri"),
 			ConversationContext:   ctx.String("conversation-context"),
 			ConversationLanguage:  ctx.String("conversation-language"),
