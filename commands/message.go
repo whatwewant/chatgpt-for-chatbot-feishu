@@ -105,6 +105,7 @@ func CreateMessageCommand(
 					})
 					if err != nil {
 						logger.Errorf("failed to request answer: %v", err)
+						replyText(reply, fmt.Sprintf("服务异常：%s", err.Error()))
 						return fmt.Errorf("failed to request answer: %v", err)
 					}
 
