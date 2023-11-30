@@ -26,6 +26,7 @@ func CreateDrawCommand(
 			}
 
 			logger.Infof("[draw]: %v", prompt)
+			replyText(reply, "创作中，请稍等 ...")
 
 			logger.Infof("[draw]: request image generation ...")
 			response, err := chatgptClient.ImageGeneration(&openaiclient.ImageGenerationRequest{
