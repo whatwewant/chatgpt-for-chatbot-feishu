@@ -16,8 +16,10 @@ func CreateResetCommand(
 ) *chatbot.Command {
 	return &chatbot.Command{
 		Handler: func(args []string, request *feishuEvent.EventRequest, reply chatbot.MessageReply) error {
-			if err := isAllowToDo(feishuClient, cfg, request, "reset"); err != nil {
-				return err
+			if request.IsGroupChat() {
+				if err := isAllowToDo(feishuClient, cfg, request, "reset"); err != nil {
+					return err
+				}
 			}
 
 			if err := chatgptClient.ResetConversation(request.ChatID()); err != nil {
