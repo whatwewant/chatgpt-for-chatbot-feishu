@@ -105,6 +105,34 @@ func CreateMessageCommand(
 					return
 				}
 
+				// too long to answer
+				answerTimeout := time.AfterFunc(3*time.Minute, func() {
+					msgType, content, err := mc.
+						NewContent().
+						Post(&mc.ContentTypePost{
+							ZhCN: &mc.ContentTypePostBody{
+								Content: [][]mc.ContentTypePostBodyItem{
+									{
+										{
+											Tag:      "text",
+											UnEscape: true,
+											Text:     "（思考有点慢，可能是网络或者模型等原因，请稍等 ...）",
+										},
+									},
+								},
+							},
+						}).
+						Build()
+					if err != nil {
+						logger.Errorf("failed to build content: %v", err)
+						return
+					}
+					if err := reply(string(content), msgType); err != nil {
+						logger.Errorf("failed to reply: %v", err)
+						return
+					}
+				})
+
 				conversation, err := chatgptClient.GetOrCreateConversation(request.ChatID(), &chatgpt.ConversationConfig{
 					MaxMessages: 50,
 					Model:       cfg.OpenAIModel,
@@ -122,7 +150,6 @@ func CreateMessageCommand(
 
 				var answer []byte
 				err = retry.Retry(func() error {
-
 					answer, err = conversation.Ask([]byte(question), &chatgpt.ConversationAskConfig{
 						ID:   request.Event.Message.MessageID,
 						User: user.User.Name,
@@ -152,6 +179,7 @@ func CreateMessageCommand(
 					}
 					return
 				}
+				answerTimeout.Stop()
 
 				logger.Debugf("ChatGPT 答 %s：%s", user.User.Name, answer)
 
