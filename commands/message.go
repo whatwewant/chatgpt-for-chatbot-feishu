@@ -77,9 +77,33 @@ func CreateMessageCommand(
 			}
 
 			go func() {
-				logger.Debugf("%s 问 ChatGPT：%s", user.User.Name, question)
-
 				var err error
+
+				logger.Debugf("%s 问 ChatGPT：%s", user.User.Name, question)
+				msgType, content, err := mc.
+					NewContent().
+					Post(&mc.ContentTypePost{
+						ZhCN: &mc.ContentTypePostBody{
+							Content: [][]mc.ContentTypePostBodyItem{
+								{
+									{
+										Tag:      "text",
+										UnEscape: true,
+										Text:     "正在思考中，请稍等...",
+									},
+								},
+							},
+						},
+					}).
+					Build()
+				if err != nil {
+					logger.Errorf("failed to build content: %v", err)
+					return
+				}
+				if err := reply(string(content), msgType); err != nil {
+					logger.Errorf("failed to reply: %v", err)
+					return
+				}
 
 				conversation, err := chatgptClient.GetOrCreateConversation(request.ChatID(), &chatgpt.ConversationConfig{
 					MaxMessages: 50,
@@ -136,7 +160,7 @@ func CreateMessageCommand(
 				// 	responseMessage = fmt.Sprintf("%s\n-------------\n%s", question, answer)
 				// }
 
-				msgType, content, err := mc.
+				msgType, content, err = mc.
 					NewContent().
 					Post(&mc.ContentTypePost{
 						ZhCN: &mc.ContentTypePostBody{
