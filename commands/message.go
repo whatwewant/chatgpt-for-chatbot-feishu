@@ -132,6 +132,7 @@ func CreateMessageCommand(
 						return
 					}
 				})
+				defer answerTimeout.Stop()
 
 				conversation, err := chatgptClient.GetOrCreateConversation(request.ChatID(), &chatgpt.ConversationConfig{
 					MaxMessages: 50,
@@ -179,7 +180,6 @@ func CreateMessageCommand(
 					}
 					return
 				}
-				answerTimeout.Stop()
 
 				logger.Debugf("ChatGPT 答 %s：%s", user.User.Name, answer)
 
