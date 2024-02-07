@@ -130,7 +130,7 @@ func (d *TimeDuration) String() string {
 
 	// s
 	if d.Duration < time.Minute {
-		return fmt.Sprintf("%ds", d.Duration.Seconds())
+		return fmt.Sprintf("%.2fs", d.Duration.Seconds())
 	}
 
 	// m
