@@ -1,6 +1,8 @@
 package commands
 
 import (
+	"time"
+
 	"github.com/go-zoox/chatgpt-for-chatbot-feishu/config"
 	"github.com/go-zoox/core-utils/fmt"
 	"github.com/go-zoox/feishu"
@@ -96,4 +98,41 @@ func getUser(feishuClient feishu.Client, request *feishuEvent.EventRequest, cfg 
 			UserID:  sender.SenderID.UserID,
 		},
 	}, nil
+}
+
+type TimeConsumer struct {
+	startedAt time.Time
+}
+
+func NewTimeConsumer() *TimeConsumer {
+	t := &TimeConsumer{}
+	t.Start()
+	return t
+}
+
+func (c *TimeConsumer) Start() {
+	c.startedAt = time.Now()
+}
+
+func (c *TimeConsumer) Consume() *TimeDuration {
+	return &TimeDuration{time.Since(c.startedAt)}
+}
+
+type TimeDuration struct {
+	Duration time.Duration
+}
+
+func (d *TimeDuration) String() string {
+	// ms => miliseconds
+	if d.Duration < time.Second {
+		return fmt.Sprintf("%dms", d.Duration.Milliseconds())
+	}
+
+	// s
+	if d.Duration < time.Minute {
+		return fmt.Sprintf("%ds", d.Duration.Seconds())
+	}
+
+	// m
+	return fmt.Sprintf("%dm %ds", int(d.Duration.Minutes()), int(d.Duration.Seconds())%60)
 }

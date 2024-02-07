@@ -78,6 +78,7 @@ func CreateMessageCommand(
 
 			go func() {
 				var err error
+				tc := NewTimeConsumer()
 
 				logger.Debugf("%s 问 ChatGPT：%s", user.User.Name, question)
 				msgType, content, err := mc.
@@ -89,7 +90,7 @@ func CreateMessageCommand(
 									{
 										Tag:      "text",
 										UnEscape: true,
-										Text:     "正在思考中，请稍等...",
+										Text:     "思考中，请稍等...",
 									},
 								},
 							},
@@ -183,7 +184,7 @@ func CreateMessageCommand(
 
 				logger.Debugf("ChatGPT 答 %s：%s", user.User.Name, answer)
 
-				responseMessage := string(answer)
+				responseMessage := fmt.Sprintf("%s [耗时：%s]", string(answer), tc.Consume())
 				// if request.IsGroupChat() {
 				// 	responseMessage = fmt.Sprintf("%s\n-------------\n%s", question, answer)
 				// }
